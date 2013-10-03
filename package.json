@@ -1,0 +1,18 @@
+{
+  "name": "RenderKid",
+  "version": "0.0.0",
+  "description": "",
+  "main": "scripts/js/lib/RenderKid.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://192.168.1.3:8001/ariaminaei/renderkid.git"
+  },
+  "author": "Aria Minaei aria.minaei@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "amdefine": "0.0.8"
+  }
+}
