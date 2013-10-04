@@ -11,16 +11,6 @@ trimLeft = (str) ->
 
 	str.replace /^[\ ]+/, ''
 
-trimRight = (str) ->
-
-	str.replace /[\ ]+$/, ''
-
-trim = (str) ->
-
-	str
-	.replace(/^[\ ]+/, '')
-	.replace(/[\ ]+$/, '')
-
 formattedLineTokens =
 
 	ansi: ///
@@ -41,7 +31,8 @@ formattedLineTokens =
 
 	///
 
-classic.implement Configurable_, class Shell
+#
+module.exports = classic.implement Configurable_, class RenderKid
 
 	@_defaultConfig:
 
@@ -51,7 +42,7 @@ classic.implement Configurable_, class Shell
 
 		do @_initConfig
 
-		@config Shell._defaultConfig
+		@config RenderKid._defaultConfig
 
 		@config initialConfig
 
@@ -69,7 +60,15 @@ classic.implement Configurable_, class Shell
 
 		dombie s, (er, res) ->
 
-			later.resolve res
+			if er?
+
+				later.reject er
+
+			else
+
+				later.resolve res
+
+			return
 
 		later.promise
 
@@ -392,5 +391,3 @@ classic.implement Configurable_, class Shell
 			throw Error "Format tags must only come with a single text node child"
 
 		@_style textNode.data, style
-
-module.exports = Shell
