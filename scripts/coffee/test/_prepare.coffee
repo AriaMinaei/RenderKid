@@ -4,7 +4,11 @@ path = require 'path'
 
 pathToLib = path.resolve __dirname, '../../js/lib'
 
-global.inspect = require('eyespect').inspector({pretty: yes})
+
+
+
+
+global.inspect = require('eyespect').inspector pretty: yes, maxLength: 10200
 
 require 'when/monitor/console'
 
