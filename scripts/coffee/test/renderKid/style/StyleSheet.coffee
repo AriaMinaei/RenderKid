@@ -1,4 +1,4 @@
-require '../_prepare'
+require '../../_prepare'
 
 spec ['renderKid/styles/StyleSheet'], (StyleSheet) ->
 

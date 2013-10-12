@@ -1,3 +1,4 @@
+AnsiRenderer = require './AnsiRenderer'
 Styles = require './renderKid/Styles'
 tools = require './renderKid/tools'
 wn	= require 'when'
@@ -5,6 +6,8 @@ wn	= require 'when'
 {array, classic} = require 'utila'
 
 module.exports = class RenderKid
+
+	@AnsiRenderer: AnsiRenderer
 
 	constructor: ->
 

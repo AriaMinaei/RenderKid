@@ -11,11 +11,17 @@ module.exports = class Styles
 
 			display: 'inline'
 
+			background: 'inherit'
+			color: 'inherit'
+
+
 		'body':
 
-			display: 'block'
+			background: 'none'
 
 			color: 'white'
+
+			display: 'block'
 
 			width: '80 !important'
 

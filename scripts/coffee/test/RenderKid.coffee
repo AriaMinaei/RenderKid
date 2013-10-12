@@ -22,6 +22,12 @@ inspectDom = (obj) ->
 
 spec ['RenderKid'], (RenderKid) ->
 
+	console.log '\u001b[31m reds \u001b[42m with green bg \u001b[0m'
+
+	console.log ' ss'
+
+	return
+
 	test 'Basics', ->
 
 		kid = new RenderKid

@@ -4,7 +4,25 @@ path = require 'path'
 
 pathToLib = path.resolve __dirname, '../../js/lib'
 
+purify = (obj) ->
 
+	if typeof obj isnt 'object' then return obj
+
+	ret = {}
+
+	for own key, val of obj
+
+		continue if key in ['prev', 'next', 'parent', 'attribs', 'length']
+
+		continue if val instanceof Function
+
+		ret[key] = purify val
+
+	ret
+
+global.inspectDom = (obj) ->
+
+	inspect purify obj
 
 
 
