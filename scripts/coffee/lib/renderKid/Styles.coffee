@@ -11,10 +11,6 @@ module.exports = class Styles
 
 			display: 'inline'
 
-			background: 'inherit'
-			color: 'inherit'
-
-
 		'body':
 
 			background: 'none'
@@ -24,8 +20,6 @@ module.exports = class Styles
 			display: 'block'
 
 			width: '80 !important'
-
-			marginLeft: 3
 
 	constructor: ->
 
@@ -53,4 +47,4 @@ module.exports = class Styles
 
 		user = @_userStyles.getRulesFor el
 
-		MixedDeclarationSet.mix def, user
+		MixedDeclarationSet.mix(def, user).toObject()

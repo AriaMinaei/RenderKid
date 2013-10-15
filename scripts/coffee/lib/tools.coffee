@@ -14,13 +14,6 @@ module.exports = tools =
 
 	///
 
-	tabRx: ///
-
-		^
-		[\t]{1}
-
-	///
-
 	trimLeft: (str) ->
 
 		str.replace /^[\ ]+/, ''

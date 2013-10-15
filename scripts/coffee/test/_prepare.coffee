@@ -165,6 +165,7 @@ global.chai = require 'chai'
 global.should = chai.should()
 global.expect = chai.expect
 chai.use require 'chai-as-promised'
+chai.use require 'chai-fuzzy'
 chai.Assertion.includeStack = yes
 
 chai.use require 'sinon-chai'
@@ -172,6 +173,8 @@ chai.use require 'sinon-chai'
 sinon = require 'sinon'
 
 global.getSpy = -> sinon.spy()
+
+
 
 # We're gonna need assert
 global.assert = require 'assert'

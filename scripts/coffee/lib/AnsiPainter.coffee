@@ -1,9 +1,9 @@
 tools = require './renderKid/tools'
-tags = require './ansiRenderer/tags'
-styles = require './ansiRenderer/styles'
+tags = require './ansiPainter/tags'
+styles = require './ansiPainter/styles'
 {object} = require 'utila'
 
-module.exports = class AnsiRenderer
+module.exports = class AnsiPainter
 
 	render: (s) ->
 

@@ -1,13 +1,15 @@
-AnsiRenderer = require './AnsiRenderer'
+AnsiPainter = require './AnsiPainter'
+Layout = require './Layout'
 Styles = require './renderKid/Styles'
-tools = require './renderKid/tools'
+tools = require './tools'
 wn	= require 'when'
 
 {array, classic} = require 'utila'
 
 module.exports = class RenderKid
 
-	@AnsiRenderer: AnsiRenderer
+	@AnsiPainter: AnsiPainter
+	@Layout: Layout
 
 	constructor: ->
 
@@ -23,7 +25,13 @@ module.exports = class RenderKid
 
 	_getStyleFor: (el) ->
 
-		@_styles.getStyleFor el
+		styles = el.styles
+
+		unless styles?
+
+			el.styles = styles = @_styles.getStyleFor el
+
+		styles
 
 	render: (s) ->
 
@@ -39,44 +47,63 @@ module.exports = class RenderKid
 
 		bodyTag = dom[0]
 
+		# inspectDom bodyTag
+
+		@_renderBlockEl bodyTag
+
+	_renderBlockEl: (node) ->
+
+		@_renderChildren node.children
+
+	_renderChildren: (nodes) ->
+
+		# for group in @_groupNodes nodes
+
+			# console.log 'group'
+			# inspectDom group
+
 		return
 
-		@_renderChildren dom, 0
+	_renderInlineGroup: (group) ->
 
-	_renderChildren: (nodes, indent) ->
+		str = ''
 
-		output = ''
+		for node in group
+
+			'ss'
+
+		str
+
+	_groupNodes: (nodes) ->
+
+		groups = []
+
+		cur = []
 
 		for node in nodes
 
-			if node.type is 'tag'
+			if @_isBlock node
 
-				output += @_renderTag node, indent
+				if cur.length > 0
 
-			else if node.type is 'text'
+					groups.push cur
 
-				output += @_renderText node, indent
+					cur = []
+
+				groups.push node
 
 			else
 
-				throw Error "Unexpected node type '#{node.type}"
+				cur.push node
 
-		output
+		if cur.length > 0 then groups.push cur
 
-	_renderText: (node, indent) ->
+		groups
 
-		@_indent node.data, indent
+	_isBlock: (node) ->
 
-	_fixTag: (node) ->
+		return no if node.type is 'text' or
 
-		return node if node.type isnt 'tag'
+			node.name is 'br' or @_getStyleFor(node).display isnt 'block'
 
-		indexesToRemove = []
-
-		for child, i in node.children
-
-			if child.type is 'text' and child.data.trim() is ''
-
-				indexesToRemove.push i
-
-		array.pluckMultiple node.children, indexesToRemove
+		return yes

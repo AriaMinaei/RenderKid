@@ -1,34 +1,8 @@
 require './_prepare'
 
-purify = (obj) ->
-
-	if typeof obj isnt 'object' then return obj
-
-	ret = {}
-
-	for own key, val of obj
-
-		continue if key in ['prev', 'next', 'parent', 'attribs', 'length']
-
-		continue if val instanceof Function
-
-		ret[key] = purify val
-
-	ret
-
-inspectDom = (obj) ->
-
-	inspect purify obj
-
 spec ['RenderKid'], (RenderKid) ->
 
-	console.log '\u001b[31m reds \u001b[42m with green bg \u001b[0m'
-
-	console.log ' ss'
-
-	return
-
-	test 'Basics', ->
+	_test 'Basics', ->
 
 		kid = new RenderKid
 
@@ -36,22 +10,34 @@ spec ['RenderKid'], (RenderKid) ->
 
 			'body':
 
-				color: 'white !important'
+				width: '60'
 
-				width: '10'
+			'blue':
 
-			'green':
+				color: 'cyan'
 
-				color: 'green'
+				display: 'inline'
 
-				background: 'red'
+			'red':
 
-				display: 'block !important'
+				color: 'bright-red'
 
-		# inspect kid._styles._userStyles._rulesBySelector
+				display: 'block'
 
-		string = "Some text <green>in green</green>."
+		string = "stuff <blue> in blue </blue> more stuff. <red>block stuff</red> and more <blue>stuff</blue>."
 
 		kid.render(string).then (result) ->
 
 			# console.log result
+
+	_test 'render block', ->
+
+		str = """
+
+		"""
+
+		RenderKid::_renderBlock str,
+
+			indent:
+
+				amount: 10

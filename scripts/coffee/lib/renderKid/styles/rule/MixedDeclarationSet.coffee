@@ -4,8 +4,6 @@ module.exports = class MixedDeclarationSet
 
 	@mix: (ruleSets...) ->
 
-		inspect ruleSets
-
 		mixed = new self
 
 		for rules in ruleSets
@@ -48,6 +46,20 @@ module.exports = class MixedDeclarationSet
 
 	get: (prop) ->
 
+		unless prop?
+
+			return @_declarations
+
 		return null unless @_declarations[prop]?
 
 		@_declarations[prop].val
+
+	toObject: ->
+
+		obj = {}
+
+		for prop, dec of @_declarations
+
+			obj[prop] = dec.val
+
+		obj

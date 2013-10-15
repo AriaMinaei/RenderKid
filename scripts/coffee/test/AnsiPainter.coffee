@@ -1,11 +1,11 @@
 require './_prepare'
 
-spec ['AnsiRenderer'], (AnsiRenderer) ->
+spec ['AnsiPainter'], (AnsiPainter) ->
 
 	t = """
 		 <bg-white><black>Black in White</black></bg-white>
 	"""
 
-	AnsiRenderer.render(t).then (result) ->
+	AnsiPainter.render(t).then (result) ->
 
 		console.log result
