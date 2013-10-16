@@ -1,9 +1,50 @@
-{number} = require 'utila'
 tools = require '../tools'
+blockConfig = require './block/config'
+SpecialString = require './SpecialString'
 
 module.exports = class Block
 
-	constructor: (@_layout, @_parent, @_config, @_name = '') ->
+	self = @
+
+	@defaultConfig =
+
+		blockPrependor:
+
+			fn: require './block/blockPrependor/Default'
+
+			options: amount: 0
+
+		blockAppendor:
+
+			fn: require './block/blockAppendor/Default'
+
+			options: amount: 0
+
+		linePrependor:
+
+			fn: require './block/linePrependor/Default'
+
+			options: amount: 0
+
+		lineAppendor:
+
+			fn: require './block/lineAppendor/Default'
+
+			options: amount: 0
+
+		lineWrapper:
+
+			fn: require './block/lineWrapper/Default'
+
+			options: lineWidth: null
+
+		width: 80
+
+		terminalWidth: 80
+
+	constructor: (@_layout, @_parent, config, @_name = '') ->
+
+		@_config = blockConfig config, self.defaultConfig
 
 		@_closed = no
 
@@ -14,6 +55,22 @@ module.exports = class Block
 		@_buffer = ''
 
 		@_didSeparateBlock = no
+
+		@_linePrependor =
+
+			new @_config.linePrependor.fn @_config.linePrependor.options
+
+		@_lineAppendor =
+
+			new @_config.lineAppendor.fn @_config.lineAppendor.options
+
+		@_blockPrependor =
+
+			new @_config.blockPrependor.fn @_config.blockPrependor.options
+
+		@_blockAppendor =
+
+			new @_config.blockAppendor.fn @_config.blockAppendor.options
 
 	_activate: (deactivateParent = yes) ->
 
@@ -71,9 +128,7 @@ module.exports = class Block
 
 		@_wasOpenOnce = yes
 
-		if @_config.marginTop > 0
-
-			@_parent._write (tools.repeatString "\n", @_config.marginTop), 'marginTop'
+		if @_parent? then @_parent._write @_whatToPrependToBlock()
 
 		do @_activate
 
@@ -85,19 +140,21 @@ module.exports = class Block
 
 		@_closed = yes
 
-		if @_parent?
-
-			if @_config.marginBottom > 0
-
-				@_parent._write (tools.repeatString "\n", @_config.marginBottom), 'marginBottom'
+		if @_parent? then @_parent._write @_whatToAppendToBlock()
 
 		@
+
+	isOpen: ->
+
+		@_wasOpenOnce and not @_closed
 
 	write: (str) ->
 
 		@_write str, 'user-input'
 
 	_write: (str, purpose) ->
+
+		return if str is ''
 
 		do @_ensureActive
 
@@ -123,7 +180,7 @@ module.exports = class Block
 
 		do @_ensureActive
 
-		do @_flushBuffer
+		# do @_flushBuffer
 
 		block = new Block @_layout, @, config, name
 
@@ -179,6 +236,72 @@ module.exports = class Block
 
 		@_layout._getLastWritingPurpose() isnt 'block-separation'
 
+	_toPrependToLine: ->
+
+		fromParent = ''
+
+		if @_parent?
+
+			fromParent = @_parent._toPrependToLine()
+
+		@_linePrependor.render fromParent
+
+	_toAppendToLine: ->
+
+		fromParent = ''
+
+		if @_parent?
+
+			fromParent = @_parent._toAppendToLine()
+
+		@_lineAppendor.render fromParent
+
+	_whatToPrependToBlock: ->
+
+		@_blockPrependor.render()
+
+	_whatToAppendToBlock: ->
+
+		@_blockAppendor.render()
+
 	_writeInline: (str) ->
 
-		@_layout._write str
+		lines = []
+
+		lines.push @_writeLine line for line in str.split "\n"
+
+		@_layout._write lines.join "\n"
+
+		return
+
+	_writeLine: (str) ->
+
+		remaining = SpecialString str
+
+		ret = ''
+
+		while remaining.length() > 0
+
+			toPrepend = @_toPrependToLine()
+
+			toPrependLength = SpecialString(toPrepend).length()
+
+			toAppend = @_toAppendToLine()
+
+			toAppendLength = SpecialString(toAppend).length()
+
+			lineContentLength = @_config.width - toPrependLength - toAppendLength
+
+			lineContent = remaining.cut(0, lineContentLength)
+
+			line = toPrepend + lineContent.str + toAppend
+
+			# if the current line is shorter than the terminal line width,
+			# we should add a line break to make sure we go off to the next line.
+			if SpecialString(line).length() < @_config.terminalWidth and remaining.length() > 0
+
+				line += "\n"
+
+			ret += line
+
+		ret

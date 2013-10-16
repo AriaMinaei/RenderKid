@@ -174,45 +174,8 @@ sinon = require 'sinon'
 
 global.getSpy = -> sinon.spy()
 
-
-
 # We're gonna need assert
 global.assert = require 'assert'
-
-# should.js doesn't do deep equal.
-Array::shouldEqual = (b, msg = '') ->
-
-	if msg
-
-		msg = '| ' + msg
-
-	assert.deepEqual @, b, "The two arrays are not equal " + msg
-
-Array::looselyEquals = (b) ->
-
-	a = @
-
-	return yes if a is b
-
-	return no if a.length isnt b.length
-
-	for val, i in a
-
-		if Array.isArray val
-
-			if Array.isArray b[i]
-
-				return no unless val.looselyEquals b[i]
-
-			else
-
-				return no
-
-		else
-
-			return no if val isnt b[i]
-
-	return yes
 
 process.on 'exit', ->
 

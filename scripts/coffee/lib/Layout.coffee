@@ -1,9 +1,20 @@
 Block = require './layout/Block'
 SpecialString = require './layout/SpecialString'
+{object} = require 'utila'
 
 module.exports = class Layout
 
-	constructor: ->
+	self = @
+
+	@_rootBlockConfig:
+
+		linePrependor: options: amount: 0
+		lineAppendor: options: amount: 0
+
+		blockPrependor: options: amount: 0
+		blockAppendor: options: amount: 0
+
+	constructor: (rootBlockConfig) ->
 
 		@_written = ''
 
@@ -11,7 +22,9 @@ module.exports = class Layout
 
 		@_activeBlock = null
 
-		@_root = new Block @, null, {}, '_root'
+		conf = object.append self._rootBlockConfig, rootBlockConfig
+
+		@_root = new Block @, null, conf, '__root'
 
 		@_root._open()
 
@@ -44,7 +57,7 @@ module.exports = class Layout
 			throw Error "Not all the blocks have been closed.
 				Please call block.close() on all open blocks."
 
-		@_root.close()
+		if @_root.isOpen() then @_root.close()
 
 		return
 

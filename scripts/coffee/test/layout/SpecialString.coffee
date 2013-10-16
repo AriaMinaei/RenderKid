@@ -29,3 +29,12 @@ spec ['layout/SpecialString'], (SpecialString) ->
 	test "::splitIn() works correct with normal text containing tabs and tags", ->
 
 		SpecialString("12\t3<hello>456").splitIn(3).should.be.like ['12', '\t', '3<hello>45', '6']
+
+	test "::cut() works correct with text containing tabs and tags", ->
+
+		original = SpecialString("12\t3<hello>456")
+
+		cut = original.cut(2, 3)
+
+		original._str.should.equal '123<hello>456'
+		cut._str.should.equal '\t'

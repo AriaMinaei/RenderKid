@@ -2,16 +2,16 @@ module.exports = class SpecialString
 
 	self = @
 
-	@tabRx: /^\t/
+	@_tabRx: /^\t/
 
-	@tagRx: ///
+	@_tagRx: ///
 		^
 		\<
 		[^>]+
 		>
 	///
 
-	@quotedHtmlRx: ///
+	@_quotedHtmlRx: ///
 		^
 		\&
 		(gt|lt|quot|amp|apos|nbsp)
@@ -25,6 +25,20 @@ module.exports = class SpecialString
 			return new self str
 
 		@_str = String str
+
+		@_lenCalculated = no
+
+		@_len = 0
+
+	@::__defineGetter__ 'str', ->
+
+		@_str
+
+	toString: ->
+
+		@_str
+
+	_reset: ->
 
 		@_lenCalculated = no
 
@@ -84,23 +98,65 @@ module.exports = class SpecialString
 
 		@_len
 
+	cut: (from, to) ->
+
+		unless to? then to = @length()
+
+		from = parseInt from
+
+		if from >= to
+
+			throw Error "`from` shouldn't be larger than `to`"
+
+		before = ''
+
+		after = ''
+
+		cut = ''
+
+		cur = 0
+
+		self._countChars @_str, (char, charLength) ->
+
+			if cur < from
+
+				before += char
+
+			else if cur < to
+
+				cut += char
+
+			else
+
+				after += char
+
+			cur += charLength
+
+			return
+
+		@_str = before + after
+
+		do @_reset
+
+		SpecialString cut
+
 	@_countChars: (text, cb) ->
 
 		while text.length isnt 0
 
-			if m = text.match self.tagRx
+			if m = text.match self._tagRx
 
 				char = m[0]
 				charLength = 0
 				text = text.substr char.length, text.length
 
-			else if m = text.match self.quotedHtmlRx
+			else if m = text.match self._quotedHtmlRx
 
 				char = m[0]
 				charLength = 1
 				text = text.substr char.length, text.length
 
-			else if text.match self.tabRx
+			else if text.match self._tabRx
 
 				char = "\t"
 				charLength = 8
