@@ -18,6 +18,10 @@ spec ['layout/SpecialString'], (SpecialString) ->
 
 		SpecialString('<>><').length().should.equal 4
 
+	test "::length() single tag should have length of 0", ->
+
+		SpecialString('<html>').length().should.equal 0
+
 	test "::length() works correctly with html quoted characters", ->
 
 		SpecialString(' &gt;&lt; &nbsp;').length().should.equal 5
@@ -38,3 +42,8 @@ spec ['layout/SpecialString'], (SpecialString) ->
 
 		original._str.should.equal '123<hello>456'
 		cut._str.should.equal '\t'
+
+	test "::isOnlySpecialChars() works", ->
+
+		SpecialString("12\t3<hello>456").isOnlySpecialChars().should.equal no
+		SpecialString("<hello>").isOnlySpecialChars().should.equal yes

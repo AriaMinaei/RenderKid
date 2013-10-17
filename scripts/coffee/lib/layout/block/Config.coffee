@@ -8,7 +8,6 @@ _LineAppendor = require './lineAppendor/_LineAppendor'
 
 _LineWrapper = require './lineWrapper/_LineWrapper'
 
-
 T = Joi.Types
 
 configSchema =
@@ -54,7 +53,9 @@ configSchema =
 		.required()
 
 	width: T.Number().integer().min(20).required()
-	terminalWidth: T.Number().integer().min(20).required()
+
+	prefixRaw: T.String().required().emptyOk()
+	suffixRaw: T.String().required().emptyOk()
 
 module.exports = (config, defaultConfig = {}) ->
 

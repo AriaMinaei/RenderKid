@@ -31,5 +31,6 @@ colors = [
 for color in colors
 
 	tags[color] = color: color, bg: 'inherit'
+	tags["color-#{color}"] = color: color, bg: 'inherit'
 
 	tags["bg-#{color}"] = color: 'inherit', bg: color

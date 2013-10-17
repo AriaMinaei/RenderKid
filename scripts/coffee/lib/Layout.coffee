@@ -1,12 +1,13 @@
 Block = require './layout/Block'
-SpecialString = require './layout/SpecialString'
 {object} = require 'utila'
+layoutConfig = require './layout/config'
+SpecialString = require './layout/SpecialString'
 
 module.exports = class Layout
 
 	self = @
 
-	@_rootBlockConfig:
+	@_rootBlockDefaultConfig:
 
 		linePrependor: options: amount: 0
 		lineAppendor: options: amount: 0
@@ -14,7 +15,11 @@ module.exports = class Layout
 		blockPrependor: options: amount: 0
 		blockAppendor: options: amount: 0
 
-	constructor: (rootBlockConfig) ->
+	@_defaultConfig:
+
+		terminalWidth: 80
+
+	constructor: (config = {}, rootBlockConfig = {}) ->
 
 		@_written = ''
 
@@ -22,11 +27,18 @@ module.exports = class Layout
 
 		@_activeBlock = null
 
-		conf = object.append self._rootBlockConfig, rootBlockConfig
+		@_config = layoutConfig config, self._defaultConfig
 
-		@_root = new Block @, null, conf, '__root'
+		# Every layout has a root block
+		rootConfig = object.append self._rootBlockDefaultConfig, rootBlockConfig
+
+		@_root = new Block @, null, rootConfig, '__root'
 
 		@_root._open()
+
+	getRootBlock: ->
+
+		@_root
 
 	_write: (str) ->
 

@@ -40,9 +40,10 @@ module.exports = class Block
 
 		width: 80
 
-		terminalWidth: 80
+		prefixRaw: ''
+		suffixRaw: ''
 
-	constructor: (@_layout, @_parent, config, @_name = '') ->
+	constructor: (@_layout, @_parent, config = {}, @_name = '') ->
 
 		@_config = blockConfig config, self.defaultConfig
 
@@ -132,6 +133,8 @@ module.exports = class Block
 
 		do @_activate
 
+		@_layout._write @_config.prefixRaw
+
 		@
 
 	close: ->
@@ -139,6 +142,8 @@ module.exports = class Block
 		do @_deactivate
 
 		@_closed = yes
+
+		@_layout._write @_config.suffixRaw
 
 		if @_parent? then @_parent._write @_whatToAppendToBlock()
 
@@ -156,13 +161,21 @@ module.exports = class Block
 
 		return if str is ''
 
+		str = String str
+
 		do @_ensureActive
 
-		@_layout._setLastWritingPurpose purpose
+		if SpecialString(str).length() > 0
 
-		do @_ensureBlockSeparation
+			@_layout._setLastWritingPurpose purpose
 
-		do @_ensureInlineSeparation
+			do @_ensureBlockSeparation
+
+			do @_ensureInlineSeparation
+
+		# else
+
+		# 	purpose = @_layout._getLastWritingPurpose()
 
 		@__write str, purpose
 
@@ -266,11 +279,19 @@ module.exports = class Block
 
 	_writeInline: (str) ->
 
+		if SpecialString(str).isOnlySpecialChars()
+
+			@_layout._write str
+
+			return
+
 		lines = []
 
-		lines.push @_writeLine line for line in str.split "\n"
+		for line in str.split "\n"
 
-		@_layout._write lines.join "\n"
+			lines.push @_writeLine line
+
+		@_layout._write lines.join "<none>\n</none>"
 
 		return
 
@@ -280,7 +301,7 @@ module.exports = class Block
 
 		ret = ''
 
-		while remaining.length() > 0
+		while not remaining.isEmpty()
 
 			toPrepend = @_toPrependToLine()
 
@@ -298,7 +319,7 @@ module.exports = class Block
 
 			# if the current line is shorter than the terminal line width,
 			# we should add a line break to make sure we go off to the next line.
-			if SpecialString(line).length() < @_config.terminalWidth and remaining.length() > 0
+			if SpecialString(line).length() < @_layout._config.terminalWidth and remaining.length() > 0
 
 				line += "\n"
 

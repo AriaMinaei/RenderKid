@@ -8,4 +8,4 @@ module.exports = class _LineAppendor
 
 		@_lineNo++
 
-		@_render inherited, options
+		'<none>' + @_render(inherited, options) + '</none>'

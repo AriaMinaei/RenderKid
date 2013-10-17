@@ -38,6 +38,14 @@ module.exports = class SpecialString
 
 		@_str
 
+	isEmpty: ->
+
+		@_str is ''
+
+	isOnlySpecialChars: ->
+
+		not @isEmpty() and @length() is 0
+
 	_reset: ->
 
 		@_lenCalculated = no

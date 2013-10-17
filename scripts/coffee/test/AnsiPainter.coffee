@@ -6,6 +6,6 @@ spec ['AnsiPainter'], (AnsiPainter) ->
 		 <bg-white><black>Black in White</black></bg-white>
 	"""
 
-	AnsiPainter.render(t).then (result) ->
+	AnsiPainter.paint(t).then (result) ->
 
 		console.log result

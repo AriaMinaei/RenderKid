@@ -43,8 +43,36 @@ module.exports = class Styles
 
 	getStyleFor: (el) ->
 
+		styles = el.styles
+
+		unless styles?
+
+			el.styles = styles = @_getComputedStyleFor el
+
+		styles
+
+	_getRawStyleFor: (el) ->
+
 		def = @_defaultStyles.getRulesFor el
 
 		user = @_userStyles.getRulesFor el
 
 		MixedDeclarationSet.mix(def, user).toObject()
+
+	_getComputedStyleFor: (el) ->
+
+		decs = {}
+
+		parent = el.parent
+
+		for prop, val of @_getRawStyleFor el
+
+			unless val is 'inherit'
+
+				decs[prop] = val
+
+			else
+
+				throw Error "Inherited styles are not supported yet."
+
+		decs

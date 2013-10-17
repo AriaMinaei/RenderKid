@@ -4,4 +4,4 @@ module.exports = class _BlockPrependor
 
 	render: (options) ->
 
-		@_render options
+		@_render(options)

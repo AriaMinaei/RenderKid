@@ -50,6 +50,7 @@ declarationClasses =
 	width: require './declarationBlock/Width'
 	height: require './declarationBlock/Height'
 
+	bullet: require './declarationBlock/Bullet'
 	display: require './declarationBlock/Display'
 
 	margin: require './declarationBlock/Margin'
@@ -57,3 +58,9 @@ declarationClasses =
 	marginLeft: require './declarationBlock/MarginLeft'
 	marginRight: require './declarationBlock/MarginRight'
 	marginBottom: require './declarationBlock/MarginBottom'
+
+	padding: require './declarationBlock/Padding'
+	paddingTop: require './declarationBlock/PaddingTop'
+	paddingLeft: require './declarationBlock/PaddingLeft'
+	paddingRight: require './declarationBlock/PaddingRight'
+	paddingBottom: require './declarationBlock/PaddingBottom'

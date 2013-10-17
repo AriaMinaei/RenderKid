@@ -1,3 +1,6 @@
+inlineStyleApplier = require './renderKid/styleApplier/inline'
+blockStyleApplier = require './renderKid/styleApplier/block'
+renderKidConfig = require './renderKid/config'
 AnsiPainter = require './AnsiPainter'
 Layout = require './Layout'
 Styles = require './renderKid/Styles'
@@ -8,10 +11,19 @@ wn	= require 'when'
 
 module.exports = class RenderKid
 
+	self = @
+
 	@AnsiPainter: AnsiPainter
+
 	@Layout: Layout
 
-	constructor: ->
+	@_defaultConfig:
+
+		layout: terminalWidth: 80
+
+	constructor: (config = {}) ->
+
+		@_config = renderKidConfig config, self._defaultConfig
 
 		do @_initStyles
 
@@ -25,17 +37,23 @@ module.exports = class RenderKid
 
 	_getStyleFor: (el) ->
 
-		styles = el.styles
-
-		unless styles?
-
-			el.styles = styles = @_styles.getStyleFor el
-
-		styles
+		@_styles.getStyleFor el
 
 	render: (s) ->
 
-		@_parse(s).then (dom) => @_renderDom dom
+		@_parse(s).then (dom) =>
+
+			@_renderDom dom
+
+		.then (rendered) =>
+
+			@_paint rendered
+
+	_paint: (text) ->
+
+		# inspect text
+
+		AnsiPainter.paint(text)
 
 	_parse: (string, injectFakeRoot = yes) ->
 
@@ -47,58 +65,79 @@ module.exports = class RenderKid
 
 		bodyTag = dom[0]
 
-		# inspectDom bodyTag
+		layout = new Layout @_config.layout
 
-		@_renderBlockEl bodyTag
+		rootBlock = layout.getRootBlock()
 
-	_renderBlockEl: (node) ->
+		@_renderBlockNode bodyTag, rootBlock
 
-		@_renderChildren node.children
+		layout.get()
 
-	_renderChildren: (nodes) ->
-
-		# for group in @_groupNodes nodes
-
-			# console.log 'group'
-			# inspectDom group
-
-		return
-
-	_renderInlineGroup: (group) ->
-
-		str = ''
-
-		for node in group
-
-			'ss'
-
-		str
-
-	_groupNodes: (nodes) ->
-
-		groups = []
-
-		cur = []
+	_renderChildren: (nodes, parentBlock) ->
 
 		for node in nodes
 
-			if @_isBlock node
+			@_renderNode node, parentBlock
 
-				if cur.length > 0
+		return
 
-					groups.push cur
+	_renderNode: (node, parentBlock) ->
 
-					cur = []
+		if node.type is 'text'
 
-				groups.push node
+			@_renderText node, parentBlock
 
-			else
+		else if node.name is 'br'
 
-				cur.push node
+			@_renderBr node, parentBlock
 
-		if cur.length > 0 then groups.push cur
+		else if @_isBlock node
 
-		groups
+			@_renderBlockNode node, parentBlock
+
+		else
+
+			@_renderInlineNode node, parentBlock
+
+		return
+
+	_renderText: (node, parentBlock) ->
+
+		text = node.data
+
+		text = text.replace /[\s]+/g, ' '
+
+		parentBlock.write text
+
+	_renderBlockNode: (node, parentBlock) ->
+
+		{before, after, blockConfig} =
+
+			blockStyleApplier.applyTo node, @_getStyleFor node
+
+		block = parentBlock.openBlock(blockConfig)
+
+		if before isnt '' then block.write before
+
+		@_renderChildren node.children, block
+
+		if after isnt '' then block.write after
+
+		block.close()
+
+	_renderInlineNode: (node, parentBlock) ->
+
+		{before, after} = inlineStyleApplier.applyTo node, @_getStyleFor node
+
+		if before isnt '' then parentBlock.write before
+
+		@_renderChildren node.children, parentBlock
+
+		if after isnt '' then parentBlock.write after
+
+	_renderBr: (node, parentBlock) ->
+
+		parentBlock.write "\n"
 
 	_isBlock: (node) ->
 

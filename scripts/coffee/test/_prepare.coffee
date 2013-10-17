@@ -25,7 +25,6 @@ global.inspectDom = (obj) ->
 	inspect purify obj
 
 
-
 global.inspect = require('eyespect').inspector pretty: yes, maxLength: 10200
 
 require 'when/monitor/console'
@@ -144,7 +143,7 @@ global.test = (name, rest...) ->
 
 	if checkTimeout
 
-		promise = timeout promise, 2000
+		promise = timeout promise, 100
 
 
 	promise.then ->
@@ -173,9 +172,6 @@ chai.use require 'sinon-chai'
 sinon = require 'sinon'
 
 global.getSpy = -> sinon.spy()
-
-# We're gonna need assert
-global.assert = require 'assert'
 
 process.on 'exit', ->
 

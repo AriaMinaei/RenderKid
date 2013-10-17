@@ -1,11 +1,13 @@
-tools = require './renderKid/tools'
+tools = require './tools'
 tags = require './ansiPainter/tags'
 styles = require './ansiPainter/styles'
 {object} = require 'utila'
 
 module.exports = class AnsiPainter
 
-	render: (s) ->
+	@tags: tags
+
+	paint: (s) ->
 
 		@_parse(s).then (dom) => @_renderDom dom
 
@@ -90,6 +92,6 @@ module.exports = class AnsiPainter
 
 		self._instance
 
-	@render: (str) ->
+	@paint: (str) ->
 
-		self.getInstance().render str
+		self.getInstance().paint str
