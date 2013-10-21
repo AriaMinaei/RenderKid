@@ -14,7 +14,7 @@ module.exports = class DefaultLinePrependor extends require './_LinePrependor'
 		if @_lineNo is 0 and bullet = @_config.bullet
 
 			char = bullet.char
-			charLen = SpecialString(char).length()
+			charLen = SpecialString(char).length
 
 			alignment = bullet.alignment
 

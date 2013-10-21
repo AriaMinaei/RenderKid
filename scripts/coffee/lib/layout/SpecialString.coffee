@@ -6,16 +6,16 @@ module.exports = class SpecialString
 
 	@_tagRx: ///
 		^
-		\<
+		<
 		[^>]+
 		>
 	///
 
 	@_quotedHtmlRx: ///
 		^
-		\&
+		&
 		(gt|lt|quot|amp|apos|nbsp)
-		\;
+		;
 	///
 
 	constructor: (str) ->
@@ -26,17 +26,21 @@ module.exports = class SpecialString
 
 		@_str = String str
 
-		@_lenCalculated = no
-
 		@_len = 0
 
-	@::__defineGetter__ 'str', ->
+	_getStr: ->
 
 		@_str
 
-	toString: ->
+	set: (str) ->
 
-		@_str
+		@_str = String str
+
+		@
+
+	clone: ->
+
+		new SpecialString @_str
 
 	isEmpty: ->
 
@@ -44,15 +48,13 @@ module.exports = class SpecialString
 
 	isOnlySpecialChars: ->
 
-		not @isEmpty() and @length() is 0
+		not @isEmpty() and @length is 0
 
 	_reset: ->
 
-		@_lenCalculated = no
-
 		@_len = 0
 
-	splitIn: (limit) ->
+	splitIn: (limit, trimLeftEachLine = no) ->
 
 		buffer = ''
 
@@ -72,7 +74,7 @@ module.exports = class SpecialString
 
 				bufferLength = 0
 
-			if bufferLength is 0 and char is ' ' and not justSkippedSkipChar
+			if bufferLength is 0 and char is ' ' and not justSkippedSkipChar and trimLeftEachLine
 
 				justSkippedSkipChar = yes
 
@@ -88,9 +90,19 @@ module.exports = class SpecialString
 
 		lines
 
-	length: ->
+	trim: ->
 
-		if @_lenCalculated then return @_len
+		new SpecialString(@str.trim())
+
+	trimLeft: ->
+
+		new SpecialString(@str.replace(/^\s+/, ''))
+
+	trimRight: ->
+
+		new SpecialString(@str.replace(/\s+$/, ''))
+
+	_getLength: ->
 
 		sum = 0
 
@@ -100,15 +112,11 @@ module.exports = class SpecialString
 
 			return
 
-		@_lenCalculated = yes
+		sum
 
-		@_len = sum
+	cut: (from, to, trimLeft = no) ->
 
-		@_len
-
-	cut: (from, to) ->
-
-		unless to? then to = @length()
+		unless to? then to = @length
 
 		from = parseInt from
 
@@ -125,6 +133,8 @@ module.exports = class SpecialString
 		cur = 0
 
 		self._countChars @_str, (char, charLength) ->
+
+			return if cur is from and char.match(/^\s+$/) and trimLeft
 
 			if cur < from
 
@@ -179,3 +189,9 @@ module.exports = class SpecialString
 			cb.call null, char, charLength
 
 		return
+
+for prop in ['str', 'length'] then do ->
+
+	methodName = '_get' + prop[0].toUpperCase() + prop.substr(1, prop.length)
+
+	SpecialString::__defineGetter__ prop, -> do @[methodName]

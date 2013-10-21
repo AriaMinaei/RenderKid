@@ -13,6 +13,8 @@ module.exports = blockStyleApplier = self =
 
 		@_bullet style, config
 
+		@_dims style, config
+
 		ret
 
 	_margins: (style, config) ->
@@ -60,5 +62,15 @@ module.exports = blockStyleApplier = self =
 			object.appendOnto config, linePrependor:
 
 				options: bullet: conf
+
+		return
+
+	_dims: (style, config) ->
+
+		if style.width?
+
+			w = parseInt style.width
+
+			config.width = w
 
 		return

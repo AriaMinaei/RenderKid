@@ -1,49 +1,115 @@
 require '../_prepare'
 
-spec ['layout/SpecialString'], (SpecialString) ->
+S = mod 'layout/SpecialString'
 
-	test 'returns instance', ->
+describe 'SpecialString()'
 
-		SpecialString('s').should.be.instanceOf SpecialString
+it 'should return instance', ->
 
-	test '::length() returns correct length for normal text', ->
+	S('s').should.be.instanceOf S
 
-		SpecialString('hello').length().should.equal 5
+describe 'length()'
 
-	test '::length() returns correct length for text containing tabs and tags', ->
+it 'should return correct length for normal text', ->
 
-		SpecialString('<a>he<you />l\tlo</a>').length().should.equal 13
+	S('hello').length.should.equal 5
 
-	test "::length() doesn't count empty tags as tags", ->
+it 'should return correct length for text containing tabs and tags', ->
 
-		SpecialString('<>><').length().should.equal 4
+	S('<a>he<you />l\tlo</a>').length.should.equal 13
 
-	test "::length() single tag should have length of 0", ->
+it "shouldn't count empty tags as tags", ->
 
-		SpecialString('<html>').length().should.equal 0
+	S('<>><').length.should.equal 4
 
-	test "::length() works correctly with html quoted characters", ->
+it "should count length of single tag as 0", ->
 
-		SpecialString(' &gt;&lt; &nbsp;').length().should.equal 5
+	S('<html>').length.should.equal 0
 
-	test "::splitIn() works correct with normal text", ->
+it "should work correctly with html quoted characters", ->
 
-		SpecialString("123456").splitIn(3).should.be.like ['123', '456']
+	S(' &gt;&lt; &nbsp;').length.should.equal 5
 
-	test "::splitIn() works correct with normal text containing tabs and tags", ->
+describe 'splitIn()'
 
-		SpecialString("12\t3<hello>456").splitIn(3).should.be.like ['12', '\t', '3<hello>45', '6']
+it "should work correctly with normal text", ->
 
-	test "::cut() works correct with text containing tabs and tags", ->
+	S("123456").splitIn(3).should.be.like ['123', '456']
 
-		original = SpecialString("12\t3<hello>456")
+it "should work correctly with normal text containing tabs and tags", ->
 
-		cut = original.cut(2, 3)
+	S("12\t3<hello>456").splitIn(3).should.be.like ['12', '\t', '3<hello>45', '6']
 
-		original._str.should.equal '123<hello>456'
-		cut._str.should.equal '\t'
+it "should not trimLeft all lines when trimLeft is no", ->
 
-	test "::isOnlySpecialChars() works", ->
+	S('abc def').splitIn(3).should.be.like ['abc', ' de', 'f']
 
-		SpecialString("12\t3<hello>456").isOnlySpecialChars().should.equal no
-		SpecialString("<hello>").isOnlySpecialChars().should.equal yes
+it "should trimLeft all lines when trimLeft is true", ->
+
+	S('abc def').splitIn(3, yes).should.be.like ['abc', 'def']
+
+describe 'cut()'
+
+it "should work correctly with text containing tabs and tags", ->
+
+	original = S("12\t3<hello>456")
+
+	cut = original.cut(2, 3)
+
+	original.str.should.equal '123<hello>456'
+	cut.str.should.equal '\t'
+
+it "should trim left when trimLeft is true", ->
+
+	original = S ' 132'
+
+	cut = original.cut 0, 1, yes
+
+	original.str.should.equal '32'
+	cut.str.should.equal '1'
+
+describe 'isOnlySpecialChars()'
+
+it "should work", ->
+
+	S("12\t3<hello>456").isOnlySpecialChars().should.equal no
+	S("<hello>").isOnlySpecialChars().should.equal yes
+
+describe 'clone()'
+
+it "should return independent instance", ->
+
+	a = S('hello')
+	b = a.clone()
+
+	a.str.should.equal b.str
+
+	a.should.not.equal b
+
+describe 'trim()'
+
+it "should return an independent instance", ->
+
+	s = S('')
+
+	s.trim().should.not.equal s
+
+it 'should return the same string when trim is not required', ->
+
+	S('hello').trim().str.should.equal 'hello'
+
+it 'should return trimmed string', ->
+
+	S(' hello').trim().str.should.equal 'hello'
+
+describe 'trimLeft()'
+
+it "should only trim on the left", ->
+
+	S(' hello ').trimLeft().str.should.equal 'hello '
+
+describe 'trimRight()'
+
+it "should only trim on the right", ->
+
+	S(' hello ').trimRight().str.should.equal ' hello'

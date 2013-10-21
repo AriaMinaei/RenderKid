@@ -1,4 +1,3 @@
-tools = require '../tools'
 blockConfig = require './block/config'
 SpecialString = require './SpecialString'
 
@@ -129,7 +128,7 @@ module.exports = class Block
 
 		@_wasOpenOnce = yes
 
-		if @_parent? then @_parent._write @_whatToPrependToBlock()
+		if @_parent? then @_parent._write @_whatToPrependToBlock(), 'margin'
 
 		do @_activate
 
@@ -145,7 +144,7 @@ module.exports = class Block
 
 		@_layout._write @_config.suffixRaw
 
-		if @_parent? then @_parent._write @_whatToAppendToBlock()
+		if @_parent? then @_parent._write @_whatToAppendToBlock(), 'margin'
 
 		@
 
@@ -159,23 +158,19 @@ module.exports = class Block
 
 	_write: (str, purpose) ->
 
+		do @_ensureActive
+
 		return if str is ''
 
 		str = String str
 
-		do @_ensureActive
-
-		if SpecialString(str).length() > 0
+		if SpecialString(str).length > 0
 
 			@_layout._setLastWritingPurpose purpose
 
 			do @_ensureBlockSeparation
 
 			do @_ensureInlineSeparation
-
-		# else
-
-		# 	purpose = @_layout._getLastWritingPurpose()
 
 		@__write str, purpose
 
@@ -192,8 +187,6 @@ module.exports = class Block
 	openBlock: (config, name) ->
 
 		do @_ensureActive
-
-		# do @_flushBuffer
 
 		block = new Block @_layout, @, config, name
 
@@ -285,6 +278,15 @@ module.exports = class Block
 
 			return
 
+		# yeah, I can't even look at myself right now...
+		if str.match(/^\n{2,}$/) and @_layout._getLastWritingPurpose() is 'margin'
+
+			@_layout._write str.substr(1, str.length)
+
+			@_layout._setLastWritingPurpose 'block-separation'
+
+			return
+
 		lines = []
 
 		for line in str.split "\n"
@@ -305,21 +307,21 @@ module.exports = class Block
 
 			toPrepend = @_toPrependToLine()
 
-			toPrependLength = SpecialString(toPrepend).length()
+			toPrependLength = SpecialString(toPrepend).length
 
 			toAppend = @_toAppendToLine()
 
-			toAppendLength = SpecialString(toAppend).length()
+			toAppendLength = SpecialString(toAppend).length
 
 			lineContentLength = @_config.width - toPrependLength - toAppendLength
 
-			lineContent = remaining.cut(0, lineContentLength)
+			lineContent = remaining.cut(0, lineContentLength, yes)
 
 			line = toPrepend + lineContent.str + toAppend
 
 			# if the current line is shorter than the terminal line width,
 			# we should add a line break to make sure we go off to the next line.
-			if SpecialString(line).length() < @_layout._config.terminalWidth and remaining.length() > 0
+			if SpecialString(line).length < @_layout._config.terminalWidth and remaining.length > 0
 
 				line += "\n"
 

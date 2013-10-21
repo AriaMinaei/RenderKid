@@ -9,7 +9,17 @@ module.exports = class AnsiPainter
 
 	paint: (s) ->
 
-		@_parse(s).then (dom) => @_renderDom dom
+		@_parse(s).then (dom) =>
+
+			@_replaceSpecialStrings @_renderDom dom
+
+	_replaceSpecialStrings: (str) ->
+
+		str
+		.replace(/\&nbsp\;/g, ' ')
+		.replace(/\&lt\;/g, '<')
+		.replace(/\&gt\;/g, '>')
+		.replace(/\&quot\;/g, '"')
 
 	_parse: (string, injectFakeRoot = yes) ->
 

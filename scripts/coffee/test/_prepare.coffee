@@ -1,184 +1,239 @@
-# Preparing for the tests
-amdefine = require('amdefine')(module)
-path = require 'path'
-
-pathToLib = path.resolve __dirname, '../../js/lib'
-
-purify = (obj) ->
-
-	if typeof obj isnt 'object' then return obj
-
-	ret = {}
-
-	for own key, val of obj
-
-		continue if key in ['prev', 'next', 'parent', 'attribs', 'length']
-
-		continue if val instanceof Function
-
-		ret[key] = purify val
-
-	ret
-
-global.inspectDom = (obj) ->
-
-	inspect purify obj
+# Let's write our tests using this little module until popo is ready
 
 
-global.inspect = require('eyespect').inspector pretty: yes, maxLength: 10200
+do ->
 
-require 'when/monitor/console'
+	amdefine = require('amdefine')(module)
+	path = require 'path'
 
+	pathToLib = path.resolve __dirname, '../../js/lib'
 
-# To load the dependencies in each test
-global.spec = (dependencies, func) ->
+	global.mod = (p) ->
 
-	# Resolve paths for dependencies
-	resolvedDependencies = dependencies.map (addr) ->
+		require path.resolve pathToLib, p
 
-		path.resolve pathToLib, addr
+do ->
+	purify = (obj) ->
 
-	amdefine resolvedDependencies, func
+		if typeof obj isnt 'object' then return obj
+
+		ret = {}
+
+		for own key, val of obj
+
+			continue if key in ['prev', 'next', 'parent', 'attribs', 'length']
+
+			continue if val instanceof Function
+
+			ret[key] = purify val
+
+		ret
+
+	global.inspectDom = (obj) ->
+
+		inspect purify obj
+
+	global.inspect = require('eyespect').inspector pretty: yes, maxLength: 10200
 
 color = do ->
 
-	ANSI_CODES =
-
-	    off: 0
-	    bold: 1
-	    italic: 3
-	    underline: 4
-	    blink: 5
-	    inverse: 7
-	    hidden: 8
-	    black: 30
-	    red: 31
-	    green: 32
-	    yellow: 33
-	    blue: 34
-	    magenta: 35
-	    cyan: 36
-	    white: 37
-	    black_bg: 40
-	    red_bg: 41
-	    green_bg: 42
-	    yellow_bg: 43
-	    blue_bg: 44
-	    magenta_bg: 45
-	    cyan_bg: 46
-	    white_bg: 47
+	codes = off: 0, red: 31, green: 32, yellow: 33, blue: 34
 
 	# https://github.com/loopj/commonjs-ansi-color
 	setColor = (str, color) ->
 
-	    return str  unless color
+		str = "\u001b[" + codes[color] + "m" +
 
-	    color_attrs = color.split("+")
-	    ansi_str = ""
-	    i = 0
-	    attr = undefined
+		str + "\u001b[" + codes.off + "m"
 
-	    while attr = color_attrs[i]
+		str
 
-	        ansi_str += "\u001b[" + ANSI_CODES[attr] + "m"
+class TestRunner
 
-	        i++
+	constructor: ->
 
-	    ansi_str += str + "\u001b[" + ANSI_CODES["off"] + "m"
+		@done = no
 
-	    ansi_str
+		@report = []
 
-processErrorMessage = (msg) ->
+		@pending = 0
 
-	"          " + msg
+		didBeep = no
 
-didBeep = no
-handleError = (name, err) ->
+	checkDone: ->
 
-	console.log '       ' + color(name, 'red') + '\n'
+		return if @pending > 0 or @done
 
-	if err.actual?
+		@done = yes
 
-		console.log '          Expected:'
+		for item, id in @report
 
-		console.log '          "' + color(err.expected, 'yellow') + '"\n'
+			if item.type is 'description'
 
-		console.log '          Actual:'
-		console.log '          "' + color(err.actual, 'yellow') + '"\n'
+				@renderDescription id, item
 
-	console.log '          Stack:'
+			else
 
-	console.log color(processErrorMessage(err.stack), 'yellow')
+				@renderTestcase id, item
 
-	unless didBeep
+		return
 
-		`console.log("\007")`
+	renderDescription: (id, item) ->
 
-		didBeep = yes
+		if id > 0 then console.log()
 
-handleSuccess = (name) ->
+		console.log '       %s', item.name
 
-	console.log '     √ \x1b[32m%s\x1b[0m', name
+	renderTestcase: (id, item) ->
+
+		if item.skipped?
+
+			@renderSkipped id, item
+
+		else if item.success
+
+			@renderSucess id, item
+
+		else
+
+			@renderFailure id, item
+
+	renderSucess: (id, item) ->
+
+		console.log '     √ \x1b[32m%s\x1b[0m', item.name
+
+	renderSkipped: (id, item) ->
+
+		console.log '     - \x1b[90m%s\x1b[0m', item.name
+
+	handleSuccess: (id, name) ->
+
+		@report[id].success = yes
+
+		@checkDone()
+
+	processErrorMessage: (msg) ->
+
+		"       " + msg
+
+	handleError: (id, name, err) ->
+
+		@report[id].success = no
+		@report[id].error = err
+
+		@checkDone()
+
+	renderFailure: (id, item) ->
+
+		err = item.error
+
+		console.log '       ' + color(item.name, 'red') + '\n'
+
+		if err.actual?
+
+			console.log '       Expected:'
+
+			console.log '       "' + color(err.expected, 'yellow') + '"\n'
+
+			console.log '       Actual:'
+			console.log '       "' + color(err.actual, 'yellow') + '"\n'
+
+		console.log '       Stack:'
+
+		console.log color(@processErrorMessage(err.stack), 'yellow')
+
+		unless @didBeep
+
+			`console.log("\007")`
+
+			@didBeep = yes
+
+	describe: (name) ->
+
+		@report.push type: 'description', name: name
+
+		return
+
+	skip: (name) ->
+
+		@report.push type: 'test', name: name, skipped: yes
+
+	test: (name, rest...) ->
+
+		@pending++
+
+		@report.push type: 'test', name: name, result: 'pending'
+
+		id = @report.length - 1
+
+		if rest.length is 1
+
+			checkTimeout = yes
+
+			fn = rest[0]
+
+		else if rest.length is 2
+
+			checkTimeout = Boolean rest[0]
+
+			fn = rest[1]
+
+		promise = w().then =>
+
+			do fn
+
+		if checkTimeout
+
+			promise = timeout promise, 100
+
+		promise.then =>
+
+			@pending--
+			@handleSuccess id, name
+
+		, (err) =>
+
+			@pending--
+			@handleError id, name, err
+
+tests = new TestRunner
+
+global.test = global.it = tests.test.bind tests
+
+global.test.skip = tests.skip.bind tests
+
+global._test = tests.skip.bind tests
+
+global.describe = tests.describe.bind tests
 
 w = require 'when'
+
 timeout = require 'when/timeout'
 
-global.test = (name, rest...) ->
+require 'when/monitor/console'
 
-	if rest.length is 1
+do ->
 
-		checkTimeout = yes
+	global.chai = require 'chai'
 
-		fn = rest[0]
+	chai.should()
 
-	else if rest.length is 2
+	global.expect = chai.expect
 
-		checkTimeout = Boolean rest[0]
+	chai.use require 'chai-fuzzy'
 
-		fn = rest[1]
+	chai.use require 'chai-as-promised'
 
-	promise = w().then ->
+	chai.Assertion.includeStack = yes
 
-		do fn
+	process.on 'exit', ->
 
-	if checkTimeout
+		tests.checkDone()
 
-		promise = timeout promise, 100
+		console.log "\n\n"
 
+	delay = require 'when/delay'
 
-	promise.then ->
+	global.after = (ms, cb) ->
 
-		handleSuccess name
-
-	, (err) ->
-
-		handleError name, err
-
-global._test = (name) ->
-
-	console.log color('     # ' + name, 'bold')
-
-
-global.chai = require 'chai'
-
-global.should = chai.should()
-global.expect = chai.expect
-chai.use require 'chai-as-promised'
-chai.use require 'chai-fuzzy'
-chai.Assertion.includeStack = yes
-
-chai.use require 'sinon-chai'
-
-sinon = require 'sinon'
-
-global.getSpy = -> sinon.spy()
-
-process.on 'exit', ->
-
-	console.log "\n\n\n"
-
-delay = require 'when/delay'
-
-global.after = (ms, cb) ->
-
-	delay(ms).then -> do cb
+		delay(ms).then -> do cb

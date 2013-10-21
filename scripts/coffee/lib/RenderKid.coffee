@@ -51,8 +51,6 @@ module.exports = class RenderKid
 
 	_paint: (text) ->
 
-		# inspect text
-
 		AnsiPainter.paint(text)
 
 	_parse: (string, injectFakeRoot = yes) ->
@@ -106,6 +104,14 @@ module.exports = class RenderKid
 		text = node.data
 
 		text = text.replace /[\s]+/g, ' '
+
+		text = text.trim()
+
+		return if text.length is 0
+
+		if text is 'Item 1'
+
+			debugger
 
 		parentBlock.write text
 
