@@ -4,7 +4,6 @@
   "description": "",
   "main": "scripts/js/lib/RenderKid.js",
   "dependencies": {
-    "lax": "~0.1.0",
     "utila": "~0.1.0",
     "CSSselect": "~0.3.11",
     "htmlparser2": "~3.3.0",
@@ -16,7 +15,7 @@
     "chai-fuzzy": "~1.3.0",
     "chai-as-promised": "~3.3.1",
     "chai": "~1.6.0",
-    "eyespect": "~0.1.8",
+    "eyespect": "~0.1.8"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
