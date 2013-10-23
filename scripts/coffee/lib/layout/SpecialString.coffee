@@ -132,7 +132,11 @@ module.exports = class SpecialString
 
 		cur = 0
 
-		self._countChars @_str, (char, charLength) ->
+		self._countChars @_str, (char, charLength) =>
+
+			if @str is 'ab<tag>'
+
+				console.log charLength, char
 
 			return if cur is from and char.match(/^\s+$/) and trimLeft
 
@@ -140,7 +144,8 @@ module.exports = class SpecialString
 
 				before += char
 
-			else if cur < to
+			# let's be greedy
+			else if cur < to or cur + charLength <= to
 
 				cut += char
 

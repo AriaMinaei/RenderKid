@@ -2,4 +2,10 @@ require './_prepare'
 
 RenderKid = mod 'RenderKid'
 
-_test "TODO"
+describe "constructor()"
+
+it "should work", ->
+
+	r = new RenderKid
+
+_test "todo..."

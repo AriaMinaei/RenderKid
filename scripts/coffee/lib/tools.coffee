@@ -34,3 +34,12 @@ module.exports = tools =
 		parser.end()
 
 		later.promise
+
+	quote: (str) ->
+
+		String(str)
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/\n/g, '<br>')
+		.replace(/\"/g, '&quot;')
+		.replace(/\ /g, '&nbsp;')

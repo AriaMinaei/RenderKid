@@ -346,6 +346,26 @@ test "margin bottom should work for: block, line, when there are two breaks in b
 
 describe "blocks and blocks"
 
+it "should not get extra break lines for full-width lines", ->
+
+	l = new Layout
+
+	l.openBlock(conf width: 20).write('01234567890123456789').close()
+
+	l.openBlock().write('b').close()
+
+	get(l).should.equal '01234567890123456789\nb'
+
+it "should not get extra break lines for full-width lines followed by a margin", ->
+
+	l = new Layout
+
+	l.openBlock(conf width: 20, bottom: 1).write('01234567890123456789').close()
+
+	l.openBlock().write('b').close()
+
+	get(l).should.equal '01234567890123456789\n\nb'
+
 test "a(top: 0, bottom: 0) b(top: 0, bottom: 0)", ->
 
 	l = new Layout

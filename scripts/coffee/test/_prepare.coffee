@@ -12,6 +12,7 @@ do ->
 		require path.resolve pathToLib, p
 
 do ->
+
 	purify = (obj) ->
 
 		if typeof obj isnt 'object' then return obj

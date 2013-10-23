@@ -21,6 +21,8 @@ module.exports = class RenderKid
 
 		layout: terminalWidth: 80
 
+	@quote: tools.quote
+
 	constructor: (config = {}) ->
 
 		@_config = renderKidConfig config, self._defaultConfig

@@ -16,10 +16,10 @@ module.exports = class AnsiPainter
 	_replaceSpecialStrings: (str) ->
 
 		str
-		.replace(/\&nbsp\;/g, ' ')
-		.replace(/\&lt\;/g, '<')
-		.replace(/\&gt\;/g, '>')
-		.replace(/\&quot\;/g, '"')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>')
+		.replace(/&quot;/g, '"')
 
 	_parse: (string, injectFakeRoot = yes) ->
 

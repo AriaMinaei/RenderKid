@@ -212,76 +212,111 @@ module.exports = class Block
 
 	_writeInline: (str) ->
 
+		# special characters (such as <bg-white>) don't require
+		# any wrapping...
 		if SpecialString(str).isOnlySpecialChars()
 
+			# ... and directly get appended to the layout.
 			@_layout._append str
 
 			return
 
+		# we'll be removing from the original string till it's empty
 		remaining = str
 
-		addMore = 0
+		# we might need to add a few line breaks at the end of the text.
+		lineBreaksToAppend = 0
 
+		# if text starts with line breaks...
 		if m = remaining.match /^\n+/
 
+			# ... we want to write the exact same number of line breaks
+			# to the layout.
 			for i in [1..m[0].length]
 
 				@_writeLine ''
 
 			remaining = remaining.substr m[0].length, remaining.length
 
+		# and if the text ends with line breaks...
 		if m = remaining.match /\n+$/
 
-			addMore = m[0].length
+			# we want to write the exact same number of line breaks
+			# to the end of the layout.
+			lineBreaksToAppend = m[0].length
 
 			remaining = remaining.substr 0, remaining.length - m[0].length
 
+		# now let's parse the body of the text.
 		while remaining.length > 0
 
+			# anything other than a break line...
 			if m = remaining.match /^[^\n]+/
 
+				# ... should be wrapped as a block of text.
 				@_writeLine m[0]
 
 				remaining = remaining.substr m[0].length, remaining.length
 
+			# for any number of line breaks we find inside the text...
 			else if m = remaining.match /^\n+/
 
+				# ... we write one less break line to the layout.
 				for i in [1...m[0].length]
 
 					@_writeLine ''
 
 				remaining = remaining.substr m[0].length, remaining.length
 
-		if addMore > 0
+		# if we had line breaks to append to the layout...
+		if lineBreaksToAppend > 0
 
-			for i in [1..addMore]
+			# ... we append the exact same number of line breaks to the layout.
+			for i in [1..lineBreaksToAppend]
 
 				@_writeLine ''
 
 		return
 
+	# wraps a line into multiple lines if necessary, adds horizontal margins,
+	# etc, and appends it to the layout.
 	_writeLine: (str) ->
 
+		# we'll be cutting from our string as we go
 		remaining = SpecialString str
 
+		# this will continue until nothing is left of our block.
 		loop
 
+			# left margin...
 			toPrepend = @_toPrependToLine()
 
+			# ... and its length
 			toPrependLength = SpecialString(toPrepend).length
 
+			# right margin...
 			toAppend = @_toAppendToLine()
 
+			# ... and its length
 			toAppendLength = SpecialString(toAppend).length
 
-			lineContentLength = @_config.width - toPrependLength - toAppendLength
+			# how much room is left for content
+			roomLeft = @_layout._config.terminalWidth - (toPrependLength + toAppendLength)
 
+			# how much room each line of content will have
+			lineContentLength = Math.min @_config.width, roomLeft
+
+			# cut line content, only for the amount necessary
 			lineContent = remaining.cut(0, lineContentLength, yes)
 
+			# line will consist of both margins and the content
 			line = toPrepend + lineContent.str + toAppend
 
+
+			# send it off to layout
 			@_layout._appendLine line
 
 			break if remaining.isEmpty()
+
 
 		return

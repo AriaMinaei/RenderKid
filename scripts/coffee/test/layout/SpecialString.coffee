@@ -68,6 +68,10 @@ it "should trim left when trimLeft is true", ->
 	original.str.should.equal '32'
 	cut.str.should.equal '1'
 
+it "should be greedy", ->
+
+	S("ab<tag>a").cut(0, 2).str.should.equal "ab<tag>"
+
 describe 'isOnlySpecialChars()'
 
 it "should work", ->
