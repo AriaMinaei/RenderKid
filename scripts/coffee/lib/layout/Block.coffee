@@ -128,11 +128,9 @@ module.exports = class Block
 
 		@_wasOpenOnce = yes
 
-		if @_parent? then @_parent._write @_whatToPrependToBlock(), 'margin'
+		if @_parent? then @_parent.write @_whatToPrependToBlock()
 
 		do @_activate
-
-		@_layout._write @_config.prefixRaw
 
 		@
 
@@ -142,9 +140,7 @@ module.exports = class Block
 
 		@_closed = yes
 
-		@_layout._write @_config.suffixRaw
-
-		if @_parent? then @_parent._write @_whatToAppendToBlock(), 'margin'
+		if @_parent? then @_parent.write @_whatToAppendToBlock()
 
 		@
 
@@ -154,35 +150,15 @@ module.exports = class Block
 
 	write: (str) ->
 
-		@_write str, 'user-input'
-
-	_write: (str, purpose) ->
-
 		do @_ensureActive
 
 		return if str is ''
 
 		str = String str
 
-		if SpecialString(str).length > 0
-
-			@_layout._setLastWritingPurpose purpose
-
-			do @_ensureBlockSeparation
-
-			do @_ensureInlineSeparation
-
-		@__write str, purpose
-
-		@
-
-	__write: (str, purpose) ->
-
 		@_buffer += str
 
-		@_layout._setLastWritingPurpose purpose
-
-		return
+		@
 
 	openBlock: (config, name) ->
 
@@ -205,42 +181,6 @@ module.exports = class Block
 		@_writeInline str
 
 		return
-
-	###*
-	 * This is to ensure that the current block is separated
-	 * from its last sibling block.
-	###
-	_ensureBlockSeparation: ->
-
-		return if @_didSeparateBlock
-
-		@_didSeparateBlock = yes
-
-		if @_parent? and @_isOkToWriteBlockSeparator()
-
-			do @_deactivate
-
-			@_parent._write "\n", 'block-separation'
-
-			do @_activate
-
-	###*
-	 * This is to make sure that each inline piece of text in the current
-	 * block is separated from its last sibling block.
-	###
-	_ensureInlineSeparation: ->
-
-		return unless @_buffer is ''
-
-		if @_isOkToWriteBlockSeparator()
-
-			@__write "\n", 'block-separation'
-
-		return
-
-	_isOkToWriteBlockSeparator: ->
-
-		@_layout._getLastWritingPurpose() isnt 'block-separation'
 
 	_toPrependToLine: ->
 
@@ -274,26 +214,49 @@ module.exports = class Block
 
 		if SpecialString(str).isOnlySpecialChars()
 
-			@_layout._write str
+			@_layout._append str
 
 			return
 
-		# yeah, I can't even look at myself right now...
-		if str.match(/^\n{2,}$/) and @_layout._getLastWritingPurpose() is 'margin'
+		remaining = str
 
-			@_layout._write str.substr(1, str.length)
+		addMore = 0
 
-			@_layout._setLastWritingPurpose 'block-separation'
+		if m = remaining.match /^\n+/
 
-			return
+			for i in [1..m[0].length]
 
-		lines = []
+				@_writeLine ''
 
-		for line in str.split "\n"
+			remaining = remaining.substr m[0].length, remaining.length
 
-			lines.push @_writeLine line
+		if m = remaining.match /\n+$/
 
-		@_layout._write lines.join "<none>\n</none>"
+			addMore = m[0].length
+
+			remaining = remaining.substr 0, remaining.length - m[0].length
+
+		while remaining.length > 0
+
+			if m = remaining.match /^[^\n]+/
+
+				@_writeLine m[0]
+
+				remaining = remaining.substr m[0].length, remaining.length
+
+			else if m = remaining.match /^\n+/
+
+				for i in [1...m[0].length]
+
+					@_writeLine ''
+
+				remaining = remaining.substr m[0].length, remaining.length
+
+		if addMore > 0
+
+			for i in [1..addMore]
+
+				@_writeLine ''
 
 		return
 
@@ -301,9 +264,7 @@ module.exports = class Block
 
 		remaining = SpecialString str
 
-		ret = ''
-
-		while not remaining.isEmpty()
+		loop
 
 			toPrepend = @_toPrependToLine()
 
@@ -319,12 +280,8 @@ module.exports = class Block
 
 			line = toPrepend + lineContent.str + toAppend
 
-			# if the current line is shorter than the terminal line width,
-			# we should add a line break to make sure we go off to the next line.
-			if SpecialString(line).length < @_layout._config.terminalWidth and remaining.length > 0
+			@_layout._appendLine line
 
-				line += "\n"
+			break if remaining.isEmpty()
 
-			ret += line
-
-		ret
+		return

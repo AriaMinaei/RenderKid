@@ -21,9 +21,7 @@ module.exports = class Layout
 
 	constructor: (config = {}, rootBlockConfig = {}) ->
 
-		@_written = ''
-
-		@_lastWritingPurpose
+		@_written = []
 
 		@_activeBlock = null
 
@@ -40,27 +38,31 @@ module.exports = class Layout
 
 		@_root
 
-	_write: (str) ->
+	_append: (text) ->
 
-		@_written += str
+		@_written.push text
+
+	_appendLine: (text) ->
+
+		@_append text
+
+		s = SpecialString(text)
+
+		if s.length < @_config.terminalWidth
+
+			@_append '<none>\n</none>'
 
 		@
-
-	_setLastWritingPurpose: (purpose) ->
-
-		@_lastWritingPurpose = purpose
-
-		@
-
-	_getLastWritingPurpose: ->
-
-		@_lastWritingPurpose
 
 	get: ->
 
 		do @_ensureClosed
 
-		@_written
+		if @_written[@_written.length - 1] is '<none>\n</none>'
+
+			@_written.pop()
+
+		@_written.join ""
 
 	_ensureClosed: ->
 

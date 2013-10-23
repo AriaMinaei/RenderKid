@@ -3,7 +3,6 @@
 
 do ->
 
-	amdefine = require('amdefine')(module)
 	path = require 'path'
 
 	pathToLib = path.resolve __dirname, '../../js/lib'
@@ -202,7 +201,7 @@ global.test = global.it = tests.test.bind tests
 
 global.test.skip = tests.skip.bind tests
 
-global._test = tests.skip.bind tests
+global._test = global._it = tests.skip.bind tests
 
 global.describe = tests.describe.bind tests
 

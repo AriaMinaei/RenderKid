@@ -37,7 +37,7 @@ require '../_prepare'
 
 	ret.get = (layout) ->
 
-		layout.get().replace(/<[^>]+>/g, '').replace(/^\n/, '')
+		layout.get().replace(/<[^>]+>/g, '')
 
 	ret.conf = (props) ->
 
@@ -114,11 +114,11 @@ it "should handle line breaks correctly", ->
 
 	block = l.openBlock conf width: 20
 
-	block.write 'a\n\nb'
+	block.write '\na\n\nb\n'
 
 	block.close()
 
-	get(l).should.equal 'a\n\nb'
+	get(l).should.equal '\na\n\nb\n'
 
 it "should not put extra line breaks when a line is already broken", ->
 
@@ -246,9 +246,9 @@ test "margin top should work for: line, block", ->
 
 	l.write 'a'
 
-	l.openBlock(conf top: 1).write('b').close()
+	l.openBlock(conf top: 2).write('b').close()
 
-	get(l).should.equal 'a\n\nb'
+	get(l).should.equal 'a\n\n\nb'
 
 test "margin top should work for: block, line", ->
 
@@ -297,6 +297,8 @@ test "margin bottom should work for: line, block", ->
 	l = new Layout
 
 	l.write 'a'
+
+	debugger
 
 	l.openBlock(conf bottom: 1).write('b').close()
 
@@ -394,6 +396,16 @@ test "a(top: 0, bottom: 1 br) b(br top: 1, bottom: 0)", ->
 
 	get(l).should.equal 'a\n\n\n\n\nb'
 
+test "a(top: 2, bottom: 3 a1-br-a2) b(br-b1-br-br-b2-br top: 2, bottom: 3)", ->
+
+	l = new Layout
+
+	l.openBlock(conf(top: 2, bottom: 3)).write('a1\na2').close()
+
+	l.openBlock(conf(top: 2, bottom: 3)).write('\nb1\n\nb2\n').close()
+
+	get(l).should.equal '\n\na1\na2\n\n\n\n\n\n\nb1\n\nb2\n\n\n\n'
+
 describe "nesting"
 
 it "should break one line for nested blocks", ->
@@ -410,7 +422,7 @@ it "should break one line for nested blocks", ->
 
 	get(l).should.equal 'a\nc'
 
-_test "a(left: 2) > b(top: 2)", ->
+test "a(left: 2) > b(top: 2)", ->
 
 	l = new Layout
 
@@ -422,7 +434,7 @@ _test "a(left: 2) > b(top: 2)", ->
 
 	get(l).should.equal '  \n  \n  b'
 
-_test "a(left: 2) > b(bottom: 2)", ->
+test "a(left: 2) > b(bottom: 2)", ->
 
 	l = new Layout
 
@@ -444,7 +456,7 @@ test "basic bullet", ->
 
 	get(l).should.equal '-  a'
 
-_test "a(left: 3, bullet) > b(top:1)", ->
+test "a(left: 3, bullet) > b(top:1)", ->
 
 	l = new Layout
 
