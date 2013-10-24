@@ -5,7 +5,6 @@ AnsiPainter = require './AnsiPainter'
 Layout = require './Layout'
 Styles = require './renderKid/Styles'
 tools = require './tools'
-wn	= require 'when'
 
 {array, classic} = require 'utila'
 
