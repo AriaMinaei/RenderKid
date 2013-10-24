@@ -9,9 +9,7 @@ module.exports = class AnsiPainter
 
 	paint: (s) ->
 
-		@_parse(s).then (dom) =>
-
-			@_replaceSpecialStrings @_renderDom dom
+		@_replaceSpecialStrings @_renderDom @_parse s
 
 	_replaceSpecialStrings: (str) ->
 

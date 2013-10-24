@@ -306,12 +306,11 @@ module.exports = class Block
 			# how much room each line of content will have
 			lineContentLength = Math.min @_config.width, roomLeft
 
-			# cut line content, only for the amount necessary
+			# cut line content, only for the amount needed
 			lineContent = remaining.cut(0, lineContentLength, yes)
 
 			# line will consist of both margins and the content
 			line = toPrepend + lineContent.str + toAppend
-
 
 			# send it off to layout
 			@_layout._appendLine line

@@ -43,13 +43,7 @@ module.exports = class RenderKid
 
 	render: (s) ->
 
-		@_parse(s).then (dom) =>
-
-			@_renderDom dom
-
-		.then (rendered) =>
-
-			@_paint rendered
+		return @_paint @_renderDom @_parse s
 
 	_paint: (text) ->
 

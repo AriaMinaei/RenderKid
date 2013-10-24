@@ -174,13 +174,17 @@ it "should break lines according to left margins", ->
 
 	l = new Layout
 
+	global.tick = yes
+
 	block = l.openBlock conf width: 20, left: 2
 
 	block.write '01234567890123456789'
 
 	block.close()
 
-	get(l).should.equal '  012345678901234567\n  89'
+	global.tick = no
+
+	get(l).should.equal '  01234567890123456789'
 
 it "should break lines according to right margins", ->
 
@@ -192,7 +196,7 @@ it "should break lines according to right margins", ->
 
 	block.close()
 
-	get(l).should.equal '012345678901234567  \n89  '
+	get(l).should.equal '01234567890123456789  '
 
 it "should break lines according to both margins", ->
 
@@ -204,7 +208,23 @@ it "should break lines according to both margins", ->
 
 	block.close()
 
-	get(l).should.equal ' 01234567890123456  \n 789  '
+	get(l).should.equal ' 01234567890123456789  '
+
+it "should break lines according to terminal width", ->
+
+	l = new Layout terminalWidth: 20
+
+	block = l.openBlock conf right: 2, left: 1
+
+	block.write '01234567890123456789'
+
+	block.close()
+
+	# Note: We don't expect ' 01234567890123456  \n 789  ',
+	# since the first line (' 01234567890123456  ') is a full line
+	# according to layout.config.terminalWidth and doesn't need
+	# a break line.
+	get(l).should.equal ' 01234567890123456   789  '
 
 describe "lines and blocks"
 

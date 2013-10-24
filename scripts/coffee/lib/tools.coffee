@@ -1,4 +1,3 @@
-wn = require 'when'
 htmlparser  = require 'htmlparser2'
 
 module.exports = tools =
@@ -15,17 +14,7 @@ module.exports = tools =
 
 	toDom: (string) ->
 
-		later = wn.defer()
-
-		handler = new htmlparser.DomHandler (err, dom) ->
-
-			if err?
-
-				later.reject err
-
-			else
-
-				later.resolve dom
+		handler = new htmlparser.DomHandler
 
 		parser = new htmlparser.Parser handler
 
@@ -33,7 +22,7 @@ module.exports = tools =
 
 		parser.end()
 
-		later.promise
+		handler.dom
 
 	quote: (str) ->
 
