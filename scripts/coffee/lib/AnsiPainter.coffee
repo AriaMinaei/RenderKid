@@ -18,6 +18,7 @@ module.exports = class AnsiPainter
 		.replace(/&lt;/g, '<')
 		.replace(/&gt;/g, '>')
 		.replace(/&quot;/g, '"')
+		.replace(/&amp;/g, '&')
 
 	_parse: (string, injectFakeRoot = yes) ->
 

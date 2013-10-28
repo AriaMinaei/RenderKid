@@ -6,6 +6,8 @@ paint = (t) ->
 
 	AnsiPainter.paint(t)
 
+describe "paint()"
+
 it "should handle basic coloring", ->
 
 	t = "<bg-white><black>a</black></bg-white>"
@@ -24,8 +26,8 @@ it "should skip empty tags", ->
 
 	paint(t).should.equal 'a\u001b[0m'
 
-it "should convert html entities", ->
+describe "_replaceSpecialStrings()"
 
-	t = "&gt;&lt;&quot;"
+it "should work", ->
 
-	paint(t).should.equal '><"\u001b[0m'
+	AnsiPainter::_replaceSpecialStrings('&lt;&gt;&quot;&nbsp;&amp;').should.equal '<>" &'

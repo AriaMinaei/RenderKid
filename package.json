@@ -13,7 +13,7 @@
   "devDependencies": {
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node ./node_modules/coffee-script/bin/cake test",
     "prepublish": "node ./node_modules/coffee-script/bin/cake build"
   },
   "author": "Aria Minaei",

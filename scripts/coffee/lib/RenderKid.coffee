@@ -6,7 +6,7 @@ Layout = require './Layout'
 Styles = require './renderKid/Styles'
 tools = require './tools'
 
-{array, classic} = require 'utila'
+{object} = require 'utila'
 
 module.exports = class RenderKid
 
@@ -40,9 +40,29 @@ module.exports = class RenderKid
 
 		@_styles.getStyleFor el
 
-	render: (s) ->
+	render: (input) ->
 
-		return @_paint @_renderDom @_parse s
+		return @_paint @_renderDom @_toDom input
+
+	_toDom: (input) ->
+
+		if typeof input is 'string'
+
+			return @_parse input
+
+		else if object.isBareObject(input) or Array.isArray(input)
+
+			return @_objToDom input
+
+		else
+
+			throw Error "Invalid input type. Only strings, arrays and objects are accepted"
+
+	_objToDom: (o, injectFakeRoot = yes) ->
+
+		if injectFakeRoot then o = body: o
+
+		tools.objectToDom o
 
 	_paint: (text) ->
 
@@ -52,7 +72,7 @@ module.exports = class RenderKid
 
 		if injectFakeRoot then string = '<body>' + string + '</body>'
 
-		tools.toDom string
+		tools.stringToDom string
 
 	_renderDom: (dom) ->
 
@@ -103,10 +123,6 @@ module.exports = class RenderKid
 		text = text.trim()
 
 		return if text.length is 0
-
-		if text is 'Item 1'
-
-			debugger
 
 		parentBlock.write text
 
