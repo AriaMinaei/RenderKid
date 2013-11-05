@@ -6,14 +6,21 @@
   "dependencies": {
     "CSSselect": "~0.3.11",
     "htmlparser2": "~3.3.0",
-    "joi": "~1.2.2",
-    "coffee-script": "~1.6.3",
     "joiful-experiments": "~1.2.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "coffee-script": "~1.6.3"
+  },
   "scripts": {
     "test": "node ./node_modules/coffee-script/bin/cake test",
     "prepublish": "node ./node_modules/coffee-script/bin/cake build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AriaMinaei/RenderKid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AriaMinaei/RenderKid/issues"
   },
   "author": "Aria Minaei",
   "license": "MIT"
