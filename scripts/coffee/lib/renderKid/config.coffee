@@ -1,4 +1,4 @@
-Joi = require 'joi'
+Joi = require 'joiful-experiments'
 {object} = require 'utila'
 
 T = Joi.Types

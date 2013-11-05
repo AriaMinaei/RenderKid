@@ -1,4 +1,4 @@
-Joi = require 'joi'
+Joi = require 'joiful-experiments'
 {object} = require 'utila'
 
 _BlockPrependor = require './blockPrependor/_BlockPrependor'
