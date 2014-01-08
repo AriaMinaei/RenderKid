@@ -1,7 +1,7 @@
 {
-  "name": "RenderKid",
+  "name": "renderkid",
   "version": "0.2.0-beta-1",
-  "description": "",
+  "description": "(work in progress)",
   "main": "scripts/js/lib/RenderKid.js",
   "dependencies": {
     "CSSselect": "~0.3.11",
