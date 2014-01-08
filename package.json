@@ -1,15 +1,17 @@
 {
   "name": "renderkid",
-  "version": "0.2.0-beta1",
+  "version": "0.2.0-beta2",
   "description": "(work in progress)",
   "main": "scripts/js/lib/RenderKid.js",
   "dependencies": {
     "CSSselect": "~0.3.11",
     "htmlparser2": "~3.3.0",
-    "joiful-experiments": "~1.2.2"
+    "joiful-experiments": "~1.2.2",
+    "utila": "0.3.0-beta1"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.6.3",
+    "little-popo": "0.1.4"
   },
   "scripts": {
     "test": "node ./node_modules/coffee-script/bin/cake test",
