@@ -1,6 +1,6 @@
 {
   "name": "renderkid",
-  "version": "0.2.0-beta3",
+  "version": "0.2.0-beta.4",
   "description": "(work in progress)",
   "main": "scripts/js/lib/RenderKid.js",
   "dependencies": {
@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "coffee-script": "~1.6.3",
-    "little-popo": "0.1.4"
+    "little-popo": "~0.1.4"
   },
   "scripts": {
     "test": "node ./node_modules/coffee-script/bin/cake test",

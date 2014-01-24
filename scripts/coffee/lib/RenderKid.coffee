@@ -18,7 +18,7 @@ module.exports = class RenderKid
 
 	@_defaultConfig:
 
-		layout: terminalWidth: 80
+		layout: terminalWidth: process.stdout.columns || 80
 
 	@quote: tools.quote
 
