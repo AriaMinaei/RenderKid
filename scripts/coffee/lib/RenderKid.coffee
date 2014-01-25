@@ -108,6 +108,10 @@ module.exports = class RenderKid
 
 			@_renderBlockNode node, parentBlock
 
+		else if @_isNone node
+
+			return
+
 		else
 
 			@_renderInlineNode node, parentBlock
@@ -161,5 +165,13 @@ module.exports = class RenderKid
 		return no if node.type is 'text' or
 
 			node.name is 'br' or @_getStyleFor(node).display isnt 'block'
+
+		return yes
+
+	_isNone: (node) ->
+
+		return no if node.type is 'text' or
+
+			node.name is 'br' or @_getStyleFor(node).display isnt 'none'
 
 		return yes
