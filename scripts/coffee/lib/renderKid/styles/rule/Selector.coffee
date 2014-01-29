@@ -1,4 +1,4 @@
-CSSSelect = require 'CSSSelect'
+CSSSelect = require 'CSSselect'
 
 module.exports = class Selector
 
