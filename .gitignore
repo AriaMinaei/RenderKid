@@ -9,3 +9,7 @@ node_modules
 
 npm-debug.log
 !*.gitkeep
+
+pg
+
+pg*.*

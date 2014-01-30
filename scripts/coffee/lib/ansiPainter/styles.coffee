@@ -66,8 +66,8 @@ styles.bg = (str) ->
 
 		throw Error "Unkown bg color `#{str}`"
 
-	"\x1b[" + code + "m"
+	"\x1B[" + code + "m"
 
 styles.none = (str) ->
 
-	"\x1b[" + codes.none + "m"
+	"\x1B[" + codes.none + "m"
