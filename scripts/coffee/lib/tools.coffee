@@ -76,8 +76,8 @@ module.exports = self =
 		.replace(/</g, '&lt;')
 		.replace(/>/g, '&gt;')
 		.replace(/\"/g, '&quot;')
-		.replace(/\ /g, '&nbsp;')
-		.replace(/\n/g, '<br>')
+		.replace(/\ /g, '&sp;')
+		.replace(/\n/g, '<br />')
 
 	_quoteNodeText: (text) ->
 
@@ -86,4 +86,5 @@ module.exports = self =
 		.replace(/</g, '&lt;')
 		.replace(/>/g, '&gt;')
 		.replace(/\"/g, '&quot;')
-		.replace(/\ /g, '&nbsp;')
+		.replace(/\ /g, '&sp;')
+		.replace(/\n/g, "&nl;")

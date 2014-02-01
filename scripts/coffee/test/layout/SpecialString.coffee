@@ -28,7 +28,7 @@ it "should count length of single tag as 0", ->
 
 it "should work correctly with html quoted characters", ->
 
-	S(' &gt;&lt; &nbsp;').length.should.equal 5
+	S(' &gt;&lt; &sp;').length.should.equal 5
 
 describe 'splitIn()'
 

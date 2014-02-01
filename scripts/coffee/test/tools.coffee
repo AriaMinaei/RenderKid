@@ -7,7 +7,7 @@ describe "quote()"
 it "should convert html special strings to their entities", ->
 
 	tools.quote(" abc<>\"\n")
-	.should.equal '&nbsp;abc&lt;&gt;&quot;<br>'
+	.should.equal '&sp;abc&lt;&gt;&quot;<br />'
 
 describe "stringToDom()"
 
@@ -25,4 +25,4 @@ it "should work", ->
 it "should have quoted text nodes", ->
 
 	tools.objectToDom({a: '&<> "'}).should.have.deep
-	.property '[0].children[0].data', '&amp;&lt;&gt;&nbsp;&quot;'
+	.property '[0].children[0].data', '&amp;&lt;&gt;&sp;&quot;'

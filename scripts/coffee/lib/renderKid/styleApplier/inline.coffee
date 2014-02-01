@@ -9,18 +9,18 @@ module.exports = inlineStyleApplier = self =
 
 		if style.marginLeft?
 
-			ret.before = (tools.repeatString "&nbsp;", parseInt style.marginLeft) + ret.before
+			ret.before = (tools.repeatString "&sp;", parseInt style.marginLeft) + ret.before
 
 		if style.marginRight?
 
-			ret.after += tools.repeatString "&nbsp;", parseInt style.marginRight
+			ret.after += tools.repeatString "&sp;", parseInt style.marginRight
 
 		if style.paddingLeft?
 
-			ret.before += tools.repeatString "&nbsp;", parseInt style.paddingLeft
+			ret.before += tools.repeatString "&sp;", parseInt style.paddingLeft
 
 		if style.paddingRight?
 
-			ret.after = (tools.repeatString "&nbsp;", parseInt style.paddingRight) + ret.after
+			ret.after = (tools.repeatString "&sp;", parseInt style.paddingRight) + ret.after
 
 		ret

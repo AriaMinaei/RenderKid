@@ -30,4 +30,4 @@ describe "_replaceSpecialStrings()"
 
 it "should work", ->
 
-	AnsiPainter::_replaceSpecialStrings('&lt;&gt;&quot;&nbsp;&amp;').should.equal '<>" &'
+	AnsiPainter::_replaceSpecialStrings('&lt;&gt;&quot;&sp;&amp;').should.equal '<>" &'

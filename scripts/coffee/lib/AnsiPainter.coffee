@@ -14,7 +14,7 @@ module.exports = class AnsiPainter
 	_replaceSpecialStrings: (str) ->
 
 		str
-		.replace(/&nbsp;/g, ' ')
+		.replace(/&sp;/g, ' ')
 		.replace(/&lt;/g, '<')
 		.replace(/&gt;/g, '>')
 		.replace(/&quot;/g, '"')
@@ -104,3 +104,7 @@ module.exports = class AnsiPainter
 	@paint: (str) ->
 
 		self.getInstance().paint str
+
+	@strip: (s) ->
+
+		s.replace(/\x1b\[[0-9]+m/g, '')

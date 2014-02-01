@@ -14,7 +14,7 @@ module.exports = class SpecialString
 	@_quotedHtmlRx: ///
 		^
 		&
-		(gt|lt|quot|amp|apos|nbsp)
+		(gt|lt|quot|amp|apos|sp)
 		;
 	///
 

@@ -82,31 +82,33 @@ module.exports = class RenderKid
 
 		rootBlock = layout.getRootBlock()
 
-		@_renderBlockNode bodyTag, rootBlock
+		@_renderBlockNode bodyTag, null, rootBlock
 
 		layout.get()
 
-	_renderChildren: (nodes, parentBlock) ->
+	_renderChildrenOf: (parentNode, parentBlock) ->
+
+		nodes = parentNode.children
 
 		for node in nodes
 
-			@_renderNode node, parentBlock
+			@_renderNode node, parentNode, parentBlock
 
 		return
 
-	_renderNode: (node, parentBlock) ->
+	_renderNode: (node, parentNode, parentBlock) ->
 
 		if node.type is 'text'
 
-			@_renderText node, parentBlock
+			@_renderText node, parentNode, parentBlock
 
 		else if node.name is 'br'
 
-			@_renderBr node, parentBlock
+			@_renderBr node, parentNode, parentBlock
 
 		else if @_isBlock node
 
-			@_renderBlockNode node, parentBlock
+			@_renderBlockNode node, parentNode, parentBlock
 
 		else if @_isNone node
 
@@ -114,23 +116,28 @@ module.exports = class RenderKid
 
 		else
 
-			@_renderInlineNode node, parentBlock
+			@_renderInlineNode node, parentNode, parentBlock
 
 		return
 
-	_renderText: (node, parentBlock) ->
+	_renderText: (node, parentNode, parentBlock) ->
 
 		text = node.data
 
-		text = text.replace /[\s]+/g, ' '
+		text = text.replace /\s+/g, ' '
 
-		text = text.trim()
+		# let's only trim if the parent is an inline element
+		unless parentNode?.styles?.display is 'inline'
+
+			text = text.trim()
 
 		return if text.length is 0
 
+		text = text.replace /&nl;/g, "\n"
+
 		parentBlock.write text
 
-	_renderBlockNode: (node, parentBlock) ->
+	_renderBlockNode: (node, parentNode, parentBlock) ->
 
 		{before, after, blockConfig} =
 
@@ -140,23 +147,23 @@ module.exports = class RenderKid
 
 		if before isnt '' then block.write before
 
-		@_renderChildren node.children, block
+		@_renderChildrenOf node, block
 
 		if after isnt '' then block.write after
 
 		block.close()
 
-	_renderInlineNode: (node, parentBlock) ->
+	_renderInlineNode: (node, parentNode, parentBlock) ->
 
 		{before, after} = inlineStyleApplier.applyTo node, @_getStyleFor node
 
 		if before isnt '' then parentBlock.write before
 
-		@_renderChildren node.children, parentBlock
+		@_renderChildrenOf node, parentBlock
 
 		if after isnt '' then parentBlock.write after
 
-	_renderBr: (node, parentBlock) ->
+	_renderBr: (node, parentNode, parentBlock) ->
 
 		parentBlock.write "\n"
 
