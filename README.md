@@ -56,3 +56,83 @@ var output = r.render('
 
 console.log(output);
 ```
+
+## Stylesheet properties
+
+### `display`
+
+Elements can have a `display` of  `inline`, `block`, or `none`:
+```javascript
+r.style({
+  "div": {
+    "display": "block"
+  },
+  
+  "span": {
+    "display": "inline" // default
+  },
+  
+  "hidden": {
+    "display": "none"
+  }
+});
+
+r.render("
+<div>This will fill one or more rows.</div>
+<span>These</span> <span>will</span> <span>be</span> in the same <span>line.</span>
+<hidden>This won't be displayed.</hidden>
+");
+```
+
+### `margin`
+
+Margins work just like they do in browsers:
+```javascript
+r.style({
+  "li": {
+    "display": "block",
+  
+    "marginTop": "1",
+    "marginRight": "2",
+    "marginBottom": "3",
+    "marginLeft": "4",
+    
+     // or the shorthand version:
+    "margin": "1 2 3 4"
+  },
+  
+  "highlight": {
+    "display": "inline",
+    "marginLeft": "2",
+    "marginRight": "2"
+  }
+});
+
+r.render("
+<ul>
+  <li>Item <highlgiht>1</highlight></li>
+  <li>Item <highlgiht>2</highlight></li>
+  <li>Item <highlgiht>3</highlight></li>
+</ul>
+");
+```
+
+### `padding`
+
+TODO
+
+### `width` and `height`
+
+Block elements can have explicit width and height:
+```javascript
+r.style({
+  "box": {
+    "display": "block",
+    "width": "4",
+    "height": "2"
+  }
+});
+
+r.render("<box>This is a box and some of its text will be truncated.</box>");
+```
+
