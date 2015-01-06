@@ -59,7 +59,7 @@ console.log(output);
 
 ## Stylesheet properties
 
-### `display`
+### Display mode
 
 Elements can have a `display` of  `inline`, `block`, or `none`:
 ```javascript
@@ -84,7 +84,7 @@ r.render("
 ");
 ```
 
-### `margin`
+### Margin
 
 Margins work just like they do in browsers:
 ```javascript
@@ -117,11 +117,11 @@ r.render("
 ");
 ```
 
-### `padding`
+### Padding
 
-TODO
+See margins above. Paddings work the same way, only inward.
 
-### `width` and `height`
+### Width and Height
 
 Block elements can have explicit width and height:
 ```javascript
@@ -136,3 +136,17 @@ r.style({
 r.render("<box>This is a box and some of its text will be truncated.</box>");
 ```
 
+### Colors
+
+You can set a custom color and background color for each element:
+
+```javascript
+r.style({
+  "error": {
+    "color": "black",
+    "background": "red"
+  }
+});
+```
+
+List of colors currently supported are `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `grey`, `bright-red`, `bright-green`, `bright-yellow`, `bright-blue`, `bright-magenta`, `bright-cyan`, `bright-white`.
