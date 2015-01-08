@@ -12,32 +12,33 @@ $ npm install renderkid
 
 ## Usage
 
-```javascript
-var RenderKid = require('renderkid');
+```coffeescript
+RenderKid = require('renderkid')
 
-var r = new RenderKid();
+r = new RenderKid()
 
 r.style({
   "ul": {
-    "display": "block",
-    "margin": "2 0 2" // Just like the CSS shorthand
-  },
+    display: "block"
+    margin: "2 0 2"
+  }
 
   "li": {
-    "display": "block",
-    "marginBottom": "1"
-  },
-  
-  "key": {
-    "color": "gray"
-  },
-  
-  "value": {
-    "color": "white"
+    display: "block"
+    marginBottom: "1"
   }
-});
 
-var output = r.render('
+  "key": {
+    color: "grey"
+    marginRight: "1"
+  }
+
+  "value": {
+    color: "bright-white"
+  }
+})
+
+output = r.render("
 <ul>
   <li>
     <key>Name:</key>
@@ -52,61 +53,66 @@ var output = r.render('
     <value>Jan 2015</value>
   </li>
 </ul>
-');
+")
 
-console.log(output);
+console.log(output)
 ```
+
+![screenshot of usage](https://github.com/AriaMinaei/RenderKid/raw/master/docs/images/usage.png)
 
 ## Stylesheet properties
 
 ### Display mode
 
-Elements can have a `display` of  `inline`, `block`, or `none`:
-```javascript
+Elements can have a `display` of either `inline`, `block`, or `none`:
+```coffeescript
 r.style({
   "div": {
-    "display": "block"
-  },
-  
-  "span": {
-    "display": "inline" // default
-  },
-  
-  "hidden": {
-    "display": "none"
+    display: "block"
   }
-});
+
+  "span": {
+    display: "inline" # default
+  }
+
+  "hidden": {
+    display: "none"
+  }
+})
 
 r.render("
 <div>This will fill one or more rows.</div>
 <span>These</span> <span>will</span> <span>be</span> in the same <span>line.</span>
 <hidden>This won't be displayed.</hidden>
-");
+")
 ```
+
+![screenshot of usage](https://github.com/AriaMinaei/RenderKid/raw/master/docs/images/display.png)
+
 
 ### Margin
 
 Margins work just like they do in browsers:
-```javascript
+```coffeescript
 r.style({
   "li": {
-    "display": "block",
-  
-    "marginTop": "1",
-    "marginRight": "2",
-    "marginBottom": "3",
-    "marginLeft": "4",
-    
+    display: "block"
+
+    marginTop: "1"
+    marginRight: "2"
+    marginBottom: "3"
+    marginLeft: "4"
+
      // or the shorthand version:
     "margin": "1 2 3 4"
   },
-  
+
   "highlight": {
-    "display": "inline",
-    "marginLeft": "2",
-    "marginRight": "2"
+    display: "inline"
+    marginLeft: "2"
+    marginRight: "2"
   }
-});
+})
 
 r.render("
 <ul>
@@ -114,7 +120,7 @@ r.render("
   <li>Item <highlgiht>2</highlight></li>
   <li>Item <highlgiht>3</highlight></li>
 </ul>
-");
+")
 ```
 
 ### Padding
@@ -124,29 +130,29 @@ See margins above. Paddings work the same way, only inward.
 ### Width and Height
 
 Block elements can have explicit width and height:
-```javascript
+```coffeescript
 r.style({
   "box": {
-    "display": "block",
-    "width": "4",
+    display: "block"
+    "width": "4"
     "height": "2"
   }
-});
+})
 
-r.render("<box>This is a box and some of its text will be truncated.</box>");
+r.render("<box>This is a box and some of its text will be truncated.</box>")
 ```
 
 ### Colors
 
 You can set a custom color and background color for each element:
 
-```javascript
+```coffeescript
 r.style({
   "error": {
-    "color": "black",
-    "background": "red"
+    color: "black"
+    background: "red"
   }
-});
+})
 ```
 
 List of colors currently supported are `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `grey`, `bright-red`, `bright-green`, `bright-yellow`, `bright-blue`, `bright-magenta`, `bright-cyan`, `bright-white`.
