@@ -80,11 +80,13 @@ r.style({
   }
 })
 
-r.render("
+output = r.render("
 <div>This will fill one or more rows.</div>
 <span>These</span> <span>will</span> <span>be</span> in the same <span>line.</span>
 <hidden>This won't be displayed.</hidden>
 ")
+
+console.log(output)
 ```
 
 ![screenshot of usage](https://github.com/AriaMinaei/RenderKid/raw/master/docs/images/display.png)
@@ -103,7 +105,7 @@ r.style({
     marginBottom: "3"
     marginLeft: "4"
 
-     // or the shorthand version:
+    # or the shorthand version:
     "margin": "1 2 3 4"
   },
 

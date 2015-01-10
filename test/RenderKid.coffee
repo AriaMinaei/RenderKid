@@ -17,7 +17,7 @@ match = do ->
 
 	match = (input, expected) ->
 
-		strip(r.render(input)).should.equal expected.trim()
+		strip(r.render(input)).trim().should.equal expected.trim()
 
 describe "RenderKid", ->
 
@@ -120,6 +120,66 @@ describe "RenderKid", ->
 			expected = """
 
 				ab1 b2c
+
+			"""
+
+			match input, expected
+
+	describe "whitespace management - block", ->
+
+		it "should add one linebreak between two blocks", ->
+
+			input = """
+
+				<div>a</div>
+				<div>b</div>
+
+			"""
+
+			expected = """
+
+				a
+				b
+
+			"""
+
+			match input, expected
+
+		it "should ignore empty blocks", ->
+
+			input = """
+
+				<div>a</div>
+				<div></div>
+				<div>b</div>
+
+			"""
+
+			expected = """
+
+				a
+				b
+
+			"""
+
+			match input, expected
+
+		it "should add an extra linebreak between two adjacent blocks inside an inline", ->
+
+			input = """
+
+				<span>
+					<div>a</div>
+					<div>b</div>
+				</span>
+
+			"""
+
+			expected = """
+
+				a
+
+				b
 
 			"""
 
