@@ -158,3 +158,24 @@ r.style({
 ```
 
 List of colors currently supported are `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `grey`, `bright-red`, `bright-green`, `bright-yellow`, `bright-blue`, `bright-magenta`, `bright-cyan`, `bright-white`.
+
+### Bullte points
+
+Right now, we have a special property called `bullet` that takes care of bullet points:
+```coffeescript
+r.style({
+  "li": {
+    bullet: '"<grey>-</grey>"'
+    marginLeft: "4"
+  }
+})
+
+r.render("
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+")
+```
+For bullet points to work, you need to set a specific `marginLeft`. The bullet character falls on the leftmost side of the block. For example, if `marginLeft` is set to `4`, and the bullet character is `-`, then the bullet point will read like `-    `. (The rest is filled with spaces).
+
+*TODO: More examples are needed here*
