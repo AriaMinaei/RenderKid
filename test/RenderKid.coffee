@@ -1,7 +1,7 @@
 RenderKid = require '../src/RenderKid'
 {strip} = require '../src/AnsiPainter'
 
-match = do ->
+match = (input, expected, setStuff) ->
 
 	r = new RenderKid
 
@@ -15,9 +15,9 @@ match = do ->
 
 			display: 'block'
 
-	match = (input, expected) ->
+	setStuff?(r)
 
-		strip(r.render(input)).trim().should.equal expected.trim()
+	strip(r.render(input)).trim().should.equal expected.trim()
 
 describe "RenderKid", ->
 
@@ -184,3 +184,124 @@ describe "RenderKid", ->
 			"""
 
 			match input, expected
+
+		it "example: div(marginBottom:1)+div", ->
+
+			input = """
+
+				<div class="first">a</div>
+				<div>b</div>
+
+			"""
+
+			expected = """
+
+				a
+
+				b
+
+			"""
+
+			match input, expected, (r) ->
+
+				r.style '.first': marginBottom: 1
+
+		it "example: div+div(marginTop:1)", ->
+
+			input = """
+
+				<div>a</div>
+				<div class="second">b</div>
+
+			"""
+
+			expected = """
+
+				a
+
+				b
+
+			"""
+
+			match input, expected, (r) ->
+
+				r.style '.second': marginTop: 1
+
+		it "example: div(marginBottom:1)+div(marginTop:1)", ->
+
+			input = """
+
+				<div class="first">a</div>
+				<div class="second">b</div>
+
+			"""
+
+			expected = """
+
+				a
+
+
+				b
+
+			"""
+
+			match input, expected, (r) ->
+
+				r.style
+
+					'.first': marginBottom: 1
+					'.second': marginTop: 1
+
+		it "example: div(marginBottom:2)+div(marginTop:1)", ->
+
+			input = """
+
+				<div class="first">a</div>
+				<div class="second">b</div>
+
+			"""
+
+			expected = """
+
+				a
+
+
+
+				b
+
+			"""
+
+			match input, expected, (r) ->
+
+				r.style
+
+					'.first': marginBottom: 2
+					'.second': marginTop: 1
+
+		it "example: div(marginBottom:2)+span+div(marginTop:1)", ->
+
+			input = """
+
+				<div class="first">a</div>
+				<span>span</span>
+				<div class="second">b</div>
+
+			"""
+
+			expected = """
+
+				a
+
+
+				span
+
+				b
+
+			"""
+
+			match input, expected, (r) ->
+
+				r.style
+
+					'.first': marginBottom: 2
+					'.second': marginTop: 1

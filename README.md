@@ -1,7 +1,7 @@
 # RenderKid
 [![Build Status](https://secure.travis-ci.org/AriaMinaei/RenderKid.png)](http://travis-ci.org/AriaMinaei/RenderKid)
 
-RenderKid allows you to use HTML and CSS to style your CLI output, making it easy to create a beautiful, readable, and consistent look for your tool.
+RenderKid allows you to use HTML and CSS to style your CLI output, making it easy to create a beautiful, readable, and consistent look for your nodejs tool.
 
 ## Installation
 
