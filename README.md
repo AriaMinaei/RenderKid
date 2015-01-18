@@ -161,21 +161,29 @@ List of colors currently supported are `black`, `red`, `green`, `yellow`, `blue`
 
 ### Bullte points
 
-Right now, we have a special property called `bullet` that takes care of bullet points:
+Block elements can have bullet points on their margins. Let's start with an example:
 ```coffeescript
 r.style({
   "li": {
-    bullet: '"<grey>-</grey>"'
-    marginLeft: "4"
+    # To add bullet points to an element, first you
+    # should make some room for the bullet point by
+    # giving your element some margin to the left:
+    marginLeft: "4",
+
+    # Now we can add a bullet point to our margin:
+    bullet: '"-"'
   }
 })
 
+# The four hyphens are there for visual reference
 r.render("
+----
 <li>Item 1</li>
 <li>Item 2</li>
 <li>Item 3</li>
+----
 ")
 ```
-For bullet points to work, you need to set a specific `marginLeft`. The bullet character falls on the leftmost side of the block. For example, if `marginLeft` is set to `4`, and the bullet character is `-`, then the bullet point will read like `-    `. (The rest is filled with spaces).
+And here is the result:
 
-*TODO: More examples are needed here*
+![screenshot of bullet points, 1](https://github.com/AriaMinaei/RenderKid/raw/master/docs/images/bullets-1.png)
