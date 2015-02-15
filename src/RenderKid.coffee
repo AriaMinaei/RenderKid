@@ -21,8 +21,11 @@ module.exports = class RenderKid
 		layout: terminalWidth: process.stdout.columns || 80
 
 	@quote: tools.quote
+	@tools: tools
 
 	constructor: (config = {}) ->
+
+		@tools = self.tools
 
 		@_config = renderKidConfig config, self._defaultConfig
 
