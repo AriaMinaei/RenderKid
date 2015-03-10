@@ -6,7 +6,6 @@
   "dependencies": {
     "CSSselect": "~0.3.11",
     "htmlparser2": "~3.3.0",
-    "joiful-experiments": "~1.2.2",
     "utila": "~0.3",
     "dom-converter": "~0.1"
   },

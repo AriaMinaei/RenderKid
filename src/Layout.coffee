@@ -1,6 +1,5 @@
 Block = require './layout/Block'
 {object} = require 'utila'
-layoutConfig = require './layout/config'
 SpecialString = require './layout/SpecialString'
 
 module.exports = class Layout
@@ -25,7 +24,7 @@ module.exports = class Layout
 
 		@_activeBlock = null
 
-		@_config = layoutConfig config, self._defaultConfig
+		@_config = object.append self._defaultConfig, config
 
 		# Every layout has a root block
 		rootConfig = object.append self._rootBlockDefaultConfig, rootBlockConfig

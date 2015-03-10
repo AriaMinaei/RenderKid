@@ -1,5 +1,5 @@
-blockConfig = require './block/config'
 SpecialString = require './SpecialString'
+{object} = require 'utila'
 
 module.exports = class Block
 
@@ -44,7 +44,7 @@ module.exports = class Block
 
 	constructor: (@_layout, @_parent, config = {}, @_name = '') ->
 
-		@_config = blockConfig config, self.defaultConfig
+		@_config = object.append self.defaultConfig, config
 
 		@_closed = no
 

@@ -1,6 +1,5 @@
 inlineStyleApplier = require './renderKid/styleApplier/inline'
 blockStyleApplier = require './renderKid/styleApplier/block'
-renderKidConfig = require './renderKid/config'
 AnsiPainter = require './AnsiPainter'
 Styles = require './renderKid/Styles'
 Layout = require './Layout'
@@ -27,7 +26,7 @@ module.exports = class RenderKid
 
 		@tools = self.tools
 
-		@_config = renderKidConfig config, self._defaultConfig
+		@_config = object.append self._defaultConfig, config
 
 		do @_initStyles
 
