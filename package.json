@@ -1,7 +1,7 @@
 {
   "name": "renderkid",
-  "version": "0.2.0-beta.12",
-  "description": "(work in progress)",
+  "version": "0.2.0",
+  "description": "Stylish console.log for node",
   "main": "lib/RenderKid.js",
   "dependencies": {
     "CSSselect": "~0.3.11",
