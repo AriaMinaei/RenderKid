@@ -20,7 +20,7 @@ module.exports = class SpecialString
 
 	constructor: (str) ->
 
-		unless @constructor is self
+		unless this instanceof self
 
 			return new self str
 
