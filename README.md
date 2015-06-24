@@ -159,7 +159,7 @@ r.style({
 
 List of colors currently supported are `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `grey`, `bright-red`, `bright-green`, `bright-yellow`, `bright-blue`, `bright-magenta`, `bright-cyan`, `bright-white`.
 
-### Bullte points
+### Bullet points
 
 Block elements can have bullet points on their margins. Let's start with an example:
 ```coffeescript
