@@ -4,10 +4,11 @@
   "description": "Stylish console.log for node",
   "main": "lib/RenderKid.js",
   "dependencies": {
-    "CSSselect": "~0.3.11",
+    "css-select": "^1.1.0",
+    "dom-converter": "~0.1",
     "htmlparser2": "~3.3.0",
-    "utila": "~0.3",
-    "dom-converter": "~0.1"
+    "strip-ansi": "^3.0.0",
+    "utila": "~0.3"
   },
   "devDependencies": {
     "chai": "^2.2.0",
