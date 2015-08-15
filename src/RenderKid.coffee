@@ -4,6 +4,7 @@ AnsiPainter = require './AnsiPainter'
 Styles = require './renderKid/Styles'
 Layout = require './Layout'
 tools = require './tools'
+stripAnsi = require 'strip-ansi'
 
 {object} = require 'utila'
 
@@ -42,9 +43,9 @@ module.exports = class RenderKid
 
 		@_styles.getStyleFor el
 
-	render: (input) ->
+	render: (input, withColors = yes) ->
 
-		return @_paint @_renderDom @_toDom input
+		return @_paint (@_renderDom @_toDom input), withColors
 
 	_toDom: (input) ->
 
@@ -66,9 +67,15 @@ module.exports = class RenderKid
 
 		tools.objectToDom o
 
-	_paint: (text) ->
+	_paint: (text, withColors) ->
 
-		AnsiPainter.paint(text)
+		painted = AnsiPainter.paint(text)
+
+		if withColors
+			painted
+		else
+			stripAnsi painted
+
 
 	_parse: (string, injectFakeRoot = yes) ->
 
