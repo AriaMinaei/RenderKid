@@ -1,65 +1,47 @@
 Rule = require './Rule'
 
 module.exports = class StyleSheet
+  self = @
 
-	self = @
+  constructor: ->
+    @_rulesBySelector = {}
 
-	constructor: ->
+  setRule: (selector, styles) ->
+    if typeof selector is 'string'
+      @_setRule selector, styles
+    else if typeof selector is 'object'
+      for key, val of selector
+        @_setRule key, val
 
-		@_rulesBySelector = {}
+    this
 
-	setRule: (selector, styles) ->
+  _setRule: (s, styles) ->
+    for selector in self.splitSelectors s
+      @_setSingleRule selector, styles
 
-		if typeof selector is 'string'
+    this
 
-			@_setRule selector, styles
+  _setSingleRule: (s, styles) ->
+    selector = self.normalizeSelector s
+    unless rule = @_rulesBySelector[selector]
+      rule = new Rule selector
+      @_rulesBySelector[selector] = rule
 
-		else if typeof selector is 'object'
+    rule.setStyles styles
+    this
 
-			for key, val of selector
+  getRulesFor: (el) ->
+    rules = []
+    for selector, rule of @_rulesBySelector
+      if rule.selector.matches el then rules.push rule
 
-				@_setRule key, val
-		@
+    rules
 
-	_setRule: (s, styles) ->
+  @normalizeSelector: (selector) ->
+    selector
+    .replace(/[\s]+/g, ' ')
+    .replace(/[\s]*([>\,\+]{1})[\s]*/g, '$1')
+    .trim()
 
-		for selector in self.splitSelectors s
-
-			@_setSingleRule selector, styles
-
-		@
-
-	_setSingleRule: (s, styles) ->
-
-		selector = self.normalizeSelector s
-
-		unless rule = @_rulesBySelector[selector]
-
-			rule = new Rule selector
-
-			@_rulesBySelector[selector] = rule
-
-		rule.setStyles styles
-
-		@
-
-	getRulesFor: (el) ->
-
-		rules = []
-
-		for selector, rule of @_rulesBySelector
-
-			if rule.selector.matches el then rules.push rule
-
-		rules
-
-	@normalizeSelector: (selector) ->
-
-		selector
-		.replace(/[\s]+/g, ' ')
-		.replace(/[\s]*([>\,\+]{1})[\s]*/g, '$1')
-		.trim()
-
-	@splitSelectors: (s) ->
-
-		s.trim().split ','
+  @splitSelectors: (s) ->
+    s.trim().split ','

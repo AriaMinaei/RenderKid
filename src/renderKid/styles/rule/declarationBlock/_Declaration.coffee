@@ -1,90 +1,60 @@
 # Abstract Style Declaration
 module.exports = class _Declaration
+  self = @
+  @importantClauseRx: /(\s\!important)$/
 
-	self = @
+  @setOnto: (declarations, prop, val) ->
+    unless dec = declarations[prop]
+      declarations[prop] = new @ prop, val
+    else
+      dec.set val
 
-	@importantClauseRx: /(\s\!important)$/
+  @sanitizeValue: (val) ->
+    String(val).trim().replace /[\s]+/g, ' '
 
-	@setOnto: (declarations, prop, val) ->
+  @inheritAllowed: no
 
-		unless dec = declarations[prop]
+  constructor: (@prop, val) ->
+    @important = no
+    @set val
 
-			declarations[prop] = new @ prop, val
+  get: ->
+    @_get()
 
-		else
+  _get: ->
+    @val
 
-			dec.set val
+  _pickImportantClause: (val) ->
+    if self.importantClauseRx.test String(val)
+      @important = yes
+      val.replace self.importantClauseRx, ''
+    else
+      @important = no
+      val
 
-	@sanitizeValue: (val) ->
+  set: (val) ->
+    val = self.sanitizeValue val
+    val = @_pickImportantClause val
+    val = val.trim()
 
-		String(val).trim().replace /[\s]+/g, ' '
+    return @ if @_handleNullOrInherit val
+    @_set val
+    this
 
-	@inheritAllowed: no
+  _set: (val) ->
+    @val = val
 
-	constructor: (@prop, val) ->
+  _handleNullOrInherit: (val) ->
+    if val is ''
+      @val = ''
+      return true
 
-		@important = no
+    if val is 'inherit'
+      if @constructor.inheritAllowed
+        @val = 'inherit'
+      else
+        throw Error "Inherit is not allowed for `#{@prop}`"
 
-		@set val
-
-	get: ->
-
-		@_get()
-
-	_get: ->
-
-		@val
-
-	_pickImportantClause: (val) ->
-
-		if self.importantClauseRx.test String(val)
-
-			@important = yes
-
-			return val.replace self.importantClauseRx, ''
-
-		else
-
-			@important = no
-
-			return val
-
-	set: (val) ->
-
-		val = self.sanitizeValue val
-
-		val = @_pickImportantClause val
-
-		val = val.trim()
-
-		return @ if @_handleNullOrInherit val
-
-		@_set val
-
-		@
-
-	_set: (val) ->
-
-		@val = val
-
-	_handleNullOrInherit: (val) ->
-
-		if val is ''
-
-			@val = ''
-
-			return true
-
-		if val is 'inherit'
-
-			if @constructor.inheritAllowed
-
-				@val = 'inherit'
-
-			else
-
-				throw Error "Inherit is not allowed for `#{@prop}`"
-
-			return true
-
-		return false
+      true
+    else
+      false

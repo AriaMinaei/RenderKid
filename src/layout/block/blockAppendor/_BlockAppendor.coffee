@@ -1,7 +1,5 @@
 module.exports = class _BlockAppendor
+  constructor: (@_config) ->
 
-	constructor: (@_config) ->
-
-	render: (options) ->
-
-		@_render(options)
+  render: (options) ->
+    @_render(options)

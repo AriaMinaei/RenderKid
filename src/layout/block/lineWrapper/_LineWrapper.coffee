@@ -1,7 +1,5 @@
 module.exports = class _LineWrapper
+  constructor: ->
 
-	constructor: ->
-
-	render: (str, options) ->
-
-		@_render str, options
+  render: (str, options) ->
+    @_render str, options

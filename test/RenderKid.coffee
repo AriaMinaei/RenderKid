@@ -2,306 +2,272 @@ RenderKid = require '../src/RenderKid'
 {strip} = require '../src/AnsiPainter'
 
 match = (input, expected, setStuff) ->
+  r = new RenderKid
+  r.style
+    span:
+      display: 'inline'
+    div:
+      display: 'block'
 
-	r = new RenderKid
-
-	r.style
-
-		span:
-
-			display: 'inline'
-
-		div:
-
-			display: 'block'
-
-	setStuff?(r)
-
-	strip(r.render(input)).trim().should.equal expected.trim()
+  setStuff?(r)
+  strip(r.render(input)).trim().should.equal expected.trim()
 
 describe "RenderKid", ->
+  describe "constructor()", ->
+    it "should work", ->
+      new RenderKid
 
-	describe "constructor()", ->
+  describe "whitespace management - inline", ->
+    it "shouldn't put extra whitespaces", ->
+      input = """
 
-		it "should work", ->
+      a<span>b</span>c
 
-			new RenderKid
+      """
 
-	describe "whitespace management - inline", ->
+      expected = """
 
-		it "shouldn't put extra whitespaces", ->
+        abc
 
-			input = """
+      """
 
-			a<span>b</span>c
+      match input, expected
 
-			"""
+    it "should allow 1 whitespace character on each side", ->
+      input = """
 
-			expected = """
+      a<span>   b     </span>c
 
-				abc
+      """
 
-			"""
+      expected = """
 
-			match input, expected
+        a b c
 
-		it "should allow 1 whitespace character on each side", ->
+      """
 
-			input = """
+      match input, expected
 
-			a<span>   b     </span>c
+    it "should eliminate extra whitespaces inside text", ->
+      input = """
 
-			"""
+      a<span>b1 \n  b2</span>c
 
-			expected = """
+      """
 
-				a b c
+      expected = """
 
-			"""
+        ab1 b2c
 
-			match input, expected
+      """
 
-		it "should eliminate extra whitespaces inside text", ->
+      match input, expected
 
-			input = """
+    it "should allow line breaks with <br />", ->
+      input = """
 
-			a<span>b1 \n  b2</span>c
+      a<span>b1<br />b2</span>c
 
-			"""
+      """
 
-			expected = """
+      expected = """
 
-				ab1 b2c
+        ab1\nb2c
 
-			"""
+      """
 
-			match input, expected
+      match input, expected
 
-		it "should allow line breaks with <br />", ->
+    it "should allow line breaks with &nl;", ->
+      input = """
 
-			input = """
+      a<span>b1&nl;b2</span>c
 
-			a<span>b1<br />b2</span>c
+      """
 
-			"""
+      expected = """
 
-			expected = """
+        ab1\nb2c
 
-				ab1\nb2c
+      """
 
-			"""
+      match input, expected
 
-			match input, expected
+    it "should allow whitespaces with &sp;", ->
+      input = """
 
-		it "should allow line breaks with &nl;", ->
+      a<span>b1&sp;b2</span>c
 
-			input = """
+      """
 
-			a<span>b1&nl;b2</span>c
+      expected = """
 
-			"""
+        ab1 b2c
 
-			expected = """
+      """
 
-				ab1\nb2c
+      match input, expected
 
-			"""
+  describe "whitespace management - block", ->
+    it "should add one linebreak between two blocks", ->
+      input = """
 
-			match input, expected
+        <div>a</div>
+        <div>b</div>
 
-		it "should allow whitespaces with &sp;", ->
+      """
 
-			input = """
+      expected = """
 
-			a<span>b1&sp;b2</span>c
+        a
+        b
 
-			"""
+      """
 
-			expected = """
+      match input, expected
 
-				ab1 b2c
+    it "should ignore empty blocks", ->
+      input = """
 
-			"""
+        <div>a</div>
+        <div></div>
+        <div>b</div>
 
-			match input, expected
+      """
 
-	describe "whitespace management - block", ->
+      expected = """
 
-		it "should add one linebreak between two blocks", ->
+        a
+        b
 
-			input = """
+      """
 
-				<div>a</div>
-				<div>b</div>
+      match input, expected
 
-			"""
+    it "should add an extra linebreak between two adjacent blocks inside an inline", ->
+      input = """
 
-			expected = """
+        <span>
+          <div>a</div>
+          <div>b</div>
+        </span>
 
-				a
-				b
+      """
 
-			"""
+      expected = """
 
-			match input, expected
+        a
 
-		it "should ignore empty blocks", ->
+        b
 
-			input = """
+      """
 
-				<div>a</div>
-				<div></div>
-				<div>b</div>
+      match input, expected
 
-			"""
+    it "example: div(marginBottom:1)+div", ->
+      input = """
 
-			expected = """
+        <div class="first">a</div>
+        <div>b</div>
 
-				a
-				b
+      """
 
-			"""
+      expected = """
 
-			match input, expected
+        a
 
-		it "should add an extra linebreak between two adjacent blocks inside an inline", ->
+        b
 
-			input = """
+      """
 
-				<span>
-					<div>a</div>
-					<div>b</div>
-				</span>
+      match input, expected, (r) ->
+        r.style '.first': marginBottom: 1
 
-			"""
+    it "example: div+div(marginTop:1)", ->
+      input = """
 
-			expected = """
+        <div>a</div>
+        <div class="second">b</div>
 
-				a
+      """
 
-				b
+      expected = """
 
-			"""
+        a
 
-			match input, expected
+        b
 
-		it "example: div(marginBottom:1)+div", ->
+      """
 
-			input = """
+      match input, expected, (r) ->
+        r.style '.second': marginTop: 1
 
-				<div class="first">a</div>
-				<div>b</div>
+    it "example: div(marginBottom:1)+div(marginTop:1)", ->
+      input = """
 
-			"""
+        <div class="first">a</div>
+        <div class="second">b</div>
 
-			expected = """
+      """
 
-				a
+      expected = """
 
-				b
+        a
 
-			"""
 
-			match input, expected, (r) ->
+        b
 
-				r.style '.first': marginBottom: 1
+      """
 
-		it "example: div+div(marginTop:1)", ->
+      match input, expected, (r) ->
+        r.style
+          '.first': marginBottom: 1
+          '.second': marginTop: 1
 
-			input = """
+    it "example: div(marginBottom:2)+div(marginTop:1)", ->
+      input = """
 
-				<div>a</div>
-				<div class="second">b</div>
+        <div class="first">a</div>
+        <div class="second">b</div>
 
-			"""
+      """
 
-			expected = """
+      expected = """
 
-				a
+        a
 
-				b
 
-			"""
 
-			match input, expected, (r) ->
+        b
 
-				r.style '.second': marginTop: 1
+      """
 
-		it "example: div(marginBottom:1)+div(marginTop:1)", ->
+      match input, expected, (r) ->
+        r.style
+          '.first': marginBottom: 2
+          '.second': marginTop: 1
 
-			input = """
+    it "example: div(marginBottom:2)+span+div(marginTop:1)", ->
+      input = """
 
-				<div class="first">a</div>
-				<div class="second">b</div>
+        <div class="first">a</div>
+        <span>span</span>
+        <div class="second">b</div>
 
-			"""
+      """
 
-			expected = """
+      expected = """
 
-				a
+        a
 
 
-				b
+        span
 
-			"""
+        b
 
-			match input, expected, (r) ->
+      """
 
-				r.style
-
-					'.first': marginBottom: 1
-					'.second': marginTop: 1
-
-		it "example: div(marginBottom:2)+div(marginTop:1)", ->
-
-			input = """
-
-				<div class="first">a</div>
-				<div class="second">b</div>
-
-			"""
-
-			expected = """
-
-				a
-
-
-
-				b
-
-			"""
-
-			match input, expected, (r) ->
-
-				r.style
-
-					'.first': marginBottom: 2
-					'.second': marginTop: 1
-
-		it "example: div(marginBottom:2)+span+div(marginTop:1)", ->
-
-			input = """
-
-				<div class="first">a</div>
-				<span>span</span>
-				<div class="second">b</div>
-
-			"""
-
-			expected = """
-
-				a
-
-
-				span
-
-				b
-
-			"""
-
-			match input, expected, (r) ->
-
-				r.style
-
-					'.first': marginBottom: 2
-					'.second': marginTop: 1
+      match input, expected, (r) ->
+        r.style
+          '.first': marginBottom: 2
+          '.second': marginTop: 1
