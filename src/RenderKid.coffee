@@ -6,6 +6,8 @@ Layout = require './Layout'
 tools = require './tools'
 {object} = require 'utila'
 stripAnsi = require 'strip-ansi'
+{width: terminalWidth} = require 'window-size'
+terminalWidth ?= 80
 
 module.exports = class RenderKid
   self = @
@@ -14,7 +16,7 @@ module.exports = class RenderKid
   @quote: tools.quote
   @tools: tools
   @_defaultConfig:
-    layout: terminalWidth: process.stdout.columns || 80
+    layout: {terminalWidth: terminalWidth}
 
   constructor: (config = {}) ->
     @tools = self.tools

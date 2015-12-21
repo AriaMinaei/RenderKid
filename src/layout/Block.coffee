@@ -1,5 +1,7 @@
 SpecialString = require './SpecialString'
 {object} = require 'utila'
+{width: terminalWidth} = require 'window-size'
+terminalWidth ?= 80
 
 module.exports = class Block
   self = @
@@ -25,7 +27,7 @@ module.exports = class Block
       fn: require './block/lineWrapper/Default'
       options: lineWidth: null
 
-    width: 80
+    width: terminalWidth
 
     prefixRaw: ''
     suffixRaw: ''

@@ -1,6 +1,8 @@
 Block = require './layout/Block'
 {object} = require 'utila'
 SpecialString = require './layout/SpecialString'
+{width: terminalWidth} = require 'window-size'
+terminalWidth ?= 80
 
 module.exports = class Layout
   self = @
@@ -12,7 +14,7 @@ module.exports = class Layout
     blockAppendor: options: amount: 0
 
   @_defaultConfig:
-    terminalWidth: 80
+    terminalWidth: terminalWidth
 
   constructor: (config = {}, rootBlockConfig = {}) ->
     @_written = []

@@ -1,5 +1,7 @@
 StyleSheet = require './styles/StyleSheet'
 MixedDeclarationSet = require './styles/rule/MixedDeclarationSet'
+{width: terminalWidth} = require 'window-size'
+terminalWidth ?= 80
 
 module.exports = class Styles
   self = @
@@ -11,7 +13,7 @@ module.exports = class Styles
       background: 'none'
       color: 'white'
       display: 'block'
-      width: '80 !important'
+      width: terminalWidth + ' !important'
 
   constructor: ->
     @_defaultStyles = new StyleSheet
