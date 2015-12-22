@@ -60,3 +60,19 @@ module.exports = self =
     .replace(/\"/g, '&quot;')
     .replace(/\ /g, '&sp;')
     .replace(/\n/g, "&nl;")
+
+  getCols: ->
+    # Based on https://github.com/jonschlinkert/window-size
+    tty = require 'tty'
+
+    cols =
+      try
+        if tty.isatty(1) && tty.isatty(2)
+          if process.stdout.getWindowSize
+            process.stdout.getWindowSize(1)[0]
+          else if tty.getWindowSize
+            tty.getWindowSize()[1]
+          else if process.stdout.columns and process.stdout.rows
+            process.stdout.rows
+
+    if typeof cols is 'number' then cols else 80

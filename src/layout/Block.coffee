@@ -1,7 +1,6 @@
 SpecialString = require './SpecialString'
 {object} = require 'utila'
-{width: terminalWidth} = require 'window-size'
-terminalWidth ?= 80
+terminalWidth = require('../tools').getCols()
 
 module.exports = class Block
   self = @

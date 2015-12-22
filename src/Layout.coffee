@@ -1,8 +1,7 @@
 Block = require './layout/Block'
 {object} = require 'utila'
 SpecialString = require './layout/SpecialString'
-{width: terminalWidth} = require 'window-size'
-terminalWidth ?= 80
+terminalWidth = require('./tools').getCols()
 
 module.exports = class Layout
   self = @

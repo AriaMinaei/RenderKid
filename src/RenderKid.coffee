@@ -6,8 +6,7 @@ Layout = require './Layout'
 tools = require './tools'
 {object} = require 'utila'
 stripAnsi = require 'strip-ansi'
-{width: terminalWidth} = require 'window-size'
-terminalWidth ?= 80
+terminalWidth = require('./tools').getCols()
 
 module.exports = class RenderKid
   self = @

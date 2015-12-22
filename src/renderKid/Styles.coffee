@@ -1,7 +1,6 @@
 StyleSheet = require './styles/StyleSheet'
 MixedDeclarationSet = require './styles/rule/MixedDeclarationSet'
-{width: terminalWidth} = require 'window-size'
-terminalWidth ?= 80
+terminalWidth = require('../tools').getCols()
 
 module.exports = class Styles
   self = @
