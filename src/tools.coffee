@@ -75,4 +75,4 @@ module.exports = self =
           else if process.stdout.columns and process.stdout.rows
             process.stdout.rows
 
-    if typeof cols is 'number' && number > 30 then cols else 80
+    if typeof cols is 'number' && cols > 30 then cols else 80
