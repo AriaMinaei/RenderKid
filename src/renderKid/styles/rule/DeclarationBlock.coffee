@@ -21,7 +21,7 @@ module.exports = class DeclarationBlock
       return Arbitrary
 
     unless cls = declarationClasses[prop]
-      throw Error "Unkown property `#{prop}`. Write it as `_#{prop}` if you're defining a custom property"
+      throw Error "Unknown property `#{prop}`. Write it as `_#{prop}` if you're defining a custom property"
 
     return cls
 

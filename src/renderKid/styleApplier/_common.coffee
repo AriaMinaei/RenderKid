@@ -7,14 +7,14 @@ module.exports = _common =
     if style.color?
       tagName = 'color-' + style.color
       unless AnsiPainter.tags[tagName]?
-        throw Error "Unkown color `#{style.color}`"
+        throw Error "Unknown color `#{style.color}`"
 
       tagsToAdd.push tagName
 
     if style.background?
       tagName = 'bg-' + style.background
       unless AnsiPainter.tags[tagName]?
-        throw Error "Unkown background `#{style.background}`"
+        throw Error "Unknown background `#{style.background}`"
 
       tagsToAdd.push tagName
 

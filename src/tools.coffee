@@ -72,7 +72,7 @@ module.exports = self =
             process.stdout.getWindowSize(1)[0]
           else if tty.getWindowSize
             tty.getWindowSize()[1]
-          else if process.stdout.columns and process.stdout.rows
-            process.stdout.rows
+          else if process.stdout.columns
+            process.stdout.columns
 
     if typeof cols is 'number' && cols > 30 then cols else 80

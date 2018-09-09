@@ -60,7 +60,7 @@ module.exports = class AnsiPainter
 
   _getStylesForTagName: (name) ->
     unless tags[name]?
-      throw Error "Unkown tag name `#{name}`"
+      throw Error "Unknown tag name `#{name}`"
 
     tags[name]
 
