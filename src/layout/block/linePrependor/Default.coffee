@@ -28,7 +28,7 @@ module.exports = class DefaultLinePrependor extends require './_LinePrependor'
           addToLeft = self.pad left
           addToRight = self.pad diff - left
         else
-          throw Error "Unkown alignment `#{alignment}`"
+          throw Error "Unknown alignment `#{alignment}`"
       output = addToLeft + char + addToRight
     else
       output = self.pad @_config.amount

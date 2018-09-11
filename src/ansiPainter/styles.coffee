@@ -43,7 +43,7 @@ styles.color = (str) ->
   return '' if str is 'none'
   code = codes[str]
   unless code?
-    throw Error "Unkown color `#{str}`"
+    throw Error "Unknown color `#{str}`"
 
   "\x1b[" + code + "m"
 
@@ -51,7 +51,7 @@ styles.bg = (str) ->
   return '' if str is 'none'
   code = codes['bg-' + str]
   unless code?
-    throw Error "Unkown bg color `#{str}`"
+    throw Error "Unknown bg color `#{str}`"
 
   "\x1B[" + code + "m"
 
