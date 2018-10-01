@@ -1,6 +1,6 @@
 {
   "name": "renderkid",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Stylish console.log for node",
   "main": "lib/RenderKid.js",
   "dependencies": {
