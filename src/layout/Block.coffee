@@ -1,6 +1,6 @@
 SpecialString = require './SpecialString'
-{object} = require 'utila'
 terminalWidth = require('../tools').getCols()
+{cloneAndMergeDeep} = require '../tools'
 
 module.exports = class Block
   self = @
@@ -32,7 +32,7 @@ module.exports = class Block
     suffixRaw: ''
 
   constructor: (@_layout, @_parent, config = {}, @_name = '') ->
-    @_config = object.append self.defaultConfig, config
+    @_config = cloneAndMergeDeep self.defaultConfig, config
     @_closed = no
     @_wasOpenOnce = no
     @_active = no

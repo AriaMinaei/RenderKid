@@ -1,7 +1,6 @@
 tools = require './tools'
 tags = require './ansiPainter/tags'
 styles = require './ansiPainter/styles'
-{object} = require 'utila'
 
 module.exports = class AnsiPainter
   @tags: tags

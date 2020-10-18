@@ -1,10 +1,11 @@
 inlineStyleApplier = require './renderKid/styleApplier/inline'
 blockStyleApplier = require './renderKid/styleApplier/block'
+isPlainObject = require 'lodash/isPlainObject'
+{cloneAndMergeDeep} = require './tools'
 AnsiPainter = require './AnsiPainter'
 Styles = require './renderKid/Styles'
 Layout = require './Layout'
 tools = require './tools'
-{object} = require 'utila'
 stripAnsi = require 'strip-ansi'
 terminalWidth = require('./tools').getCols()
 
@@ -19,7 +20,7 @@ module.exports = class RenderKid
 
   constructor: (config = {}) ->
     @tools = self.tools
-    @_config = object.append self._defaultConfig, config
+    @_config = cloneAndMergeDeep self._defaultConfig, config
     do @_initStyles
 
   _initStyles: ->
@@ -37,7 +38,7 @@ module.exports = class RenderKid
   _toDom: (input) ->
     if typeof input is 'string'
       @_parse input
-    else if object.isBareObject(input) or Array.isArray(input)
+    else if isPlainObject(input) or Array.isArray(input)
       @_objToDom input
     else
       throw Error "Invalid input type. Only strings, arrays and objects are accepted"

@@ -1,5 +1,5 @@
 _common = require './_common'
-{object} = require 'utila'
+merge = require 'lodash/merge'
 
 module.exports = blockStyleApplier = self =
   applyTo: (el, style) ->
@@ -12,19 +12,19 @@ module.exports = blockStyleApplier = self =
 
   _margins: (style, config) ->
     if style.marginLeft?
-      object.appendOnto config, linePrependor:
+      merge config, linePrependor:
         options: amount: parseInt style.marginLeft
 
     if style.marginRight?
-      object.appendOnto config, lineAppendor:
+      merge config, lineAppendor:
         options: amount: parseInt style.marginRight
 
     if style.marginTop?
-      object.appendOnto config, blockPrependor:
+      merge config, blockPrependor:
         options: amount: parseInt style.marginTop
 
     if style.marginBottom?
-      object.appendOnto config, blockAppendor:
+      merge config, blockAppendor:
         options: amount: parseInt style.marginBottom
 
     return
@@ -36,7 +36,7 @@ module.exports = blockStyleApplier = self =
       conf.alignment = style.bullet.alignment
       {before, after} = _common.getStyleTagsFor color: bullet.color, background: bullet.background
       conf.char = before + bullet.char + after
-      object.appendOnto config, linePrependor:
+      merge config, linePrependor:
         options: bullet: conf
 
     return

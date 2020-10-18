@@ -1,6 +1,8 @@
 htmlparser  = require 'htmlparser2'
-{object} = require 'utila'
 {objectToDom} = require 'dom-converter'
+merge = require 'lodash/merge'
+cloneDeep = require 'lodash/cloneDeep'
+isPlainObject = require 'lodash/isPlainObject'
 
 module.exports = self =
   repeatString: (str, times) ->
@@ -10,10 +12,13 @@ module.exports = self =
 
     output
 
+  cloneAndMergeDeep: (base, toAppend) ->
+    merge cloneDeep(base), toAppend
+
   toDom: (subject) ->
     if typeof subject is 'string'
       self.stringToDom subject
-    else if object.isBareObject subject
+    else if isPlainObject subject
       self._objectToDom subject
     else
       throw Error "tools.toDom() only supports strings and objects"
@@ -39,7 +44,7 @@ module.exports = self =
 
   objectToDom: (o) ->
     unless Array.isArray(o)
-      unless object.isBareObject(o)
+      unless isPlainObject(o)
         throw Error "objectToDom() only accepts a bare object or an array"
 
     self._fixQuotesInDom objectToDom o

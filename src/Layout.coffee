@@ -1,5 +1,5 @@
 Block = require './layout/Block'
-{object} = require 'utila'
+{cloneAndMergeDeep} = require './tools'
 SpecialString = require './layout/SpecialString'
 terminalWidth = require('./tools').getCols()
 
@@ -18,10 +18,10 @@ module.exports = class Layout
   constructor: (config = {}, rootBlockConfig = {}) ->
     @_written = []
     @_activeBlock = null
-    @_config = object.append self._defaultConfig, config
+    @_config = cloneAndMergeDeep self._defaultConfig, config
 
     # Every layout has a root block
-    rootConfig = object.append self._rootBlockDefaultConfig, rootBlockConfig
+    rootConfig = cloneAndMergeDeep self._rootBlockDefaultConfig, rootBlockConfig
     @_root = new Block @, null, rootConfig, '__root'
     @_root._open()
 
