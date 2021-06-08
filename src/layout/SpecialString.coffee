@@ -113,7 +113,7 @@ module.exports = class SpecialString
 
     @_str = before + after
     do @_reset
-    SpecialString cut
+    new SpecialString cut
 
   @_countChars: (text, cb) ->
     while text.length isnt 0

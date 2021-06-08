@@ -33,7 +33,7 @@ module.exports = class Layout
 
   _appendLine: (text) ->
     @_append text
-    s = SpecialString(text)
+    s = new SpecialString(text)
     if s.length < @_config.terminalWidth
       @_append '<none>\n</none>'
 

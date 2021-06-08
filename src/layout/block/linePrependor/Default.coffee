@@ -10,7 +10,7 @@ module.exports = class DefaultLinePrependor extends require './_LinePrependor'
   _render: (inherited, options) ->
     if @_lineNo is 0 and bullet = @_config.bullet
       char = bullet.char
-      charLen = SpecialString(char).length
+      charLen = new SpecialString(char).length
       alignment = bullet.alignment
       space = @_config.amount
       toWrite = char

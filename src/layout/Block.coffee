@@ -148,7 +148,7 @@ module.exports = class Block
   _writeInline: (str) ->
     # special characters (such as <bg-white>) don't require
     # any wrapping...
-    if SpecialString(str).isOnlySpecialChars()
+    if new SpecialString(str).isOnlySpecialChars()
       # ... and directly get appended to the layout.
       @_layout._append str
       return
@@ -205,7 +205,7 @@ module.exports = class Block
   # etc, and appends it to the layout.
   _writeLine: (str) ->
     # we'll be cutting from our string as we go
-    remaining = SpecialString str
+    remaining = new SpecialString str
 
     # this will continue until nothing is left of our block.
     loop
@@ -213,13 +213,13 @@ module.exports = class Block
       toPrepend = @_toPrependToLine()
 
       # ... and its length
-      toPrependLength = SpecialString(toPrepend).length
+      toPrependLength = new SpecialString(toPrepend).length
 
       # right margin...
       toAppend = @_toAppendToLine()
 
       # ... and its length
-      toAppendLength = SpecialString(toAppend).length
+      toAppendLength = new SpecialString(toAppend).length
 
       # how much room is left for content
       roomLeft = @_layout._config.terminalWidth - (toPrependLength + toAppendLength)
