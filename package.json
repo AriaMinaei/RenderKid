@@ -4,7 +4,7 @@
   "description": "Stylish console.log for node",
   "main": "lib/RenderKid.js",
   "dependencies": {
-    "css-select": "^4.1.2",
+    "css-select": "^4.1.3",
     "dom-converter": "^0.2",
     "htmlparser2": "^4.1.0",
     "lodash": "^4.17.20",
