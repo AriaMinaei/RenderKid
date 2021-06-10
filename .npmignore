@@ -4,6 +4,8 @@
 src/
 node_modules
 pg
+.github/
+.mocharc.yaml
 
 -p
 
