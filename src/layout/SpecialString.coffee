@@ -69,12 +69,6 @@ module.exports = class SpecialString
   trim: ->
     new SpecialString(@str.trim())
 
-  trimLeft: ->
-    new SpecialString(@str.replace(/^\s+/, ''))
-
-  trimRight: ->
-    new SpecialString(@str.replace(/\s+$/, ''))
-
   _getLength: ->
     sum = 0
     self._countChars @_str, (char, charLength) ->

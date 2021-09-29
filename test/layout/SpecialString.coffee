@@ -72,11 +72,3 @@ describe "SpecialString", ->
 
     it 'should return trimmed string', ->
       new S(' hello').trim().str.should.equal 'hello'
-
-  describe 'trimLeft()', ->
-    it "should only trim on the left", ->
-      new S(' hello ').trimLeft().str.should.equal 'hello '
-
-  describe 'trimRight()', ->
-    it "should only trim on the right", ->
-      new S(' hello ').trimRight().str.should.equal ' hello'
