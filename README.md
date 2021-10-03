@@ -118,9 +118,9 @@ r.style({
 
 r.render("
 <ul>
-  <li>Item <highlgiht>1</highlight></li>
-  <li>Item <highlgiht>2</highlight></li>
-  <li>Item <highlgiht>3</highlight></li>
+  <li>Item <highlight>1</highlight></li>
+  <li>Item <highlight>2</highlight></li>
+  <li>Item <highlight>3</highlight></li>
 </ul>
 ")
 ```
