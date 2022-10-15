@@ -13,6 +13,7 @@ module.exports = class Layout
     blockAppendor: options: amount: 0
 
   @_defaultConfig:
+    extraNewlines: true
     terminalWidth: terminalWidth
 
   constructor: (config = {}, rootBlockConfig = {}) ->
@@ -31,13 +32,22 @@ module.exports = class Layout
   _append: (text) ->
     @_written.push text
 
+  # Returns `true` when a line contains no text.
+  # First regex removes whitespace.
+  # Second regex removes HTML script tags.
+  _isEmptyLine: (line) ->
+    return line.replace(/\s/g, '').replace(/(<([^>]+)>)/ig, '') == ''
+
   _appendLine: (text) ->
+    if !@_config.extraNewlines && @_isEmptyLine(text)
+      return this
+
     @_append text
     s = new SpecialString(text)
     if s.length < @_config.terminalWidth
       @_append '<none>\n</none>'
 
-    this
+    return this
 
   get: ->
     do @_ensureClosed
