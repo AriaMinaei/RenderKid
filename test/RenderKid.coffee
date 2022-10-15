@@ -17,6 +17,10 @@ describe "RenderKid", ->
     it "should work", ->
       new RenderKid
 
+    it "should include extraNewlines:true in config", ->
+      r = new RenderKid
+      r._config.layout.extraNewlines.should.equal true
+
   describe "whitespace management - inline", ->
     it "shouldn't put extra whitespaces", ->
       input = """

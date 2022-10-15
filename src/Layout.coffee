@@ -3,12 +3,6 @@ Block = require './layout/Block'
 SpecialString = require './layout/SpecialString'
 terminalWidth = require('./tools').getCols()
 
-# Returns `true` when a line contains no text.
-# First regex removes whitespace.
-# Second regex removes HTML script tags.
-isEmptyLine = (line) ->
-  return line.replace(/\s/g, '').replace(/(<([^>]+)>)/ig, '') == ''
-
 module.exports = class Layout
   self = @
 
@@ -38,8 +32,14 @@ module.exports = class Layout
   _append: (text) ->
     @_written.push text
 
+  # Returns `true` when a line contains no text.
+  # First regex removes whitespace.
+  # Second regex removes HTML script tags.
+  _isEmptyLine: (line) ->
+    return line.replace(/\s/g, '').replace(/(<([^>]+)>)/ig, '') == ''
+
   _appendLine: (text) ->
-    if !@_config.extraNewlines && isEmptyLine(text)
+    if !@_config.extraNewlines && @_isEmptyLine(text)
       return this
 
     @_append text
