@@ -16,7 +16,10 @@ module.exports = class RenderKid
   @quote: tools.quote
   @tools: tools
   @_defaultConfig:
-    layout: {terminalWidth: terminalWidth}
+    layout: {
+      extraNewlines: true
+      terminalWidth: terminalWidth
+    }
 
   constructor: (config = {}) ->
     @tools = self.tools
